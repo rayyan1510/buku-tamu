@@ -2,7 +2,7 @@
 Ini adalah project buku tamu
 
 Berikut anggota project
-- Farhan
+- Farhan Raditiansyah
 - Rayyan
 - Ichan Lingga
 - Dimas Ariyudha
