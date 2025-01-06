@@ -5,4 +5,4 @@ Berikut anggota project
 - Farhan
 - Rayyan
 - Ichan Lingga
-- Dimas
+- Dimas Ariyudha
