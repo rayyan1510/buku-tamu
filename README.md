@@ -4,5 +4,5 @@ Ini adalah project buku tamu
 Berikut anggota project
 - Farhan
 - Rayyan
-- Ichan
+- Ichan Lingga
 - Dimas
