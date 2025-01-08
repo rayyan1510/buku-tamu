@@ -37,27 +37,81 @@
                     <option value="PNS">PNS</option>
                     <option value="Swasta">Non PNS</option>
                     <option value="Mahasiswa">Mahasiswa</option>
+                    <option value="Pekerjaan_lainnya">Lainnya</option>
+                </select>
+            </div>
+            
+            <div class="mb-3" id="additionalInput2" style="display: none;">
+                <label for="additionalInfo2" class="form-label">Detail Pekerjaan</label>
+                <select class="form-select" id="additionalInfo2">
+                    <option selected disabled>--- Pilih Detail Pekerjaan Anda ---</option>
+                    <option value="Kementerian">Kementerian/ Lembaga Pemerintah Non Kementerian</option>
+                    <option value="OPD">OPD Provinsi SUMUT</option>
+                    <option value="OPD_lain">OPD Provinsi Lain</option>
+                    <option value="OPD_kabupaten">OPD Kabupaten/Kota</option>
+                </select>
+            </div>
+
+            <div class="mb-3" id="additionalInput" style="display: none;">
+                <label for="additionalInfo" class="form-label">Detail Pekerjaan</label>
+                <input type="text" class="form-control" id="additionalInfo" placeholder="Masukkan detail pekerjaan...">
+            </div>
+
+
+            <div class="mb-3">
+                <label for="keperluan" class="form-label" id="keperluan_anda">Keperluan Anda</label>
+                <select class="form-select" id="keperluan" required>
+                    <option selected disabled>--- Pilih Keperluan Anda ---</option>
+                    <option value="Kunjungan_dinas">Kunjungan Dinas</option>
+                    <option value="Kunjungan_non_dinas">Kunjungan Non Dinas</option>
+                    <option value="Konsultasi">Konsultasi</option>
+                    <option value="Permohonan_informasi_PPID">Permohonan Informasi PPID</option>
+                    <option value="Permohonan_informasi_PB">Permohonan Informasi PB/PB UMKU</option>
+                    <option value="Pengurusan_PB_UMKU">Pengurusan PB/PB UMKU</option>
+                    <option value="Pengaduan_masyarakat">Pengaduan Masyarakat</option>
                     <option value="Lainnya">Lainnya</option>
                 </select>
             </div>
-            <div class="mb-3">
-                <label for="instansi" class="form-label asal_instansi">Asal Instansi</label>
-                <select class="form-select" id="instansi" required>
-                    <option selected disabled>--- Pilih Instansi Anda ---</option>
-                    <option value="Instansi 1">Instansi 1</option>
-                    <option value="Instansi 2">Instansi 2</option>
-                    <option value="Instansi 3">Instansi 3</option>
-                </select>
+
+            <div class="mb-3" id="keperluanInput" style="display: none;">
+                <label for="keperluanDetail" class="form-label">Detail Keperluan</label>
+                <input type="text" class="form-control" id="keperluanDetail" placeholder="Masukkan detail keperluan anda...">
             </div>
-            <div class="mb-3">
-                <label for="keperluan" class="form-label keperluan">Keperluan</label>
-                <select class="form-select" id="keperluan" required>
-                    <option selected disabled>--- Pilih Keperluan Anda ---</option>
-                    <option value="Keperluan 1">Keperluan 1</option>
-                    <option value="Keperluan 2">Keperluan 2</option>
-                    <option value="Keperluan 3">Keperluan 3</option>
-                </select>
-            </div>
+
+            <script>
+                document.getElementById('pekerjaan').addEventListener('change', function()
+                {
+                    var selectedValue = this.value;
+                    var additionalInputDiv = document.getElementById('additionalInput');
+                    var additionalInputDiv2 = document.getElementById('additionalInput2');
+
+                    // Show the input field if "Pekerjaan Lainnya" or "PNS" is selected, otherwise hide it
+                    if (selectedValue === 'Pekerjaan_lainnya') {
+                        additionalInputDiv.style.display = 'block';
+                        additionalInputDiv2.style.display = 'none';
+                    } else if (selectedValue === 'PNS') {
+                        additionalInputDiv2.style.display = 'block';
+                        additionalInputDiv.style.display = 'none';
+                    } else {
+                        additionalInputDiv.style.display = 'none';
+                        additionalInputDiv2.style.display = 'none';
+                    }
+                });
+
+                document.getElementById('keperluan').addEventListener('change', function() 
+                {
+                    var selectedValue = this.value;
+                    var statusInputDiv = document.getElementById('keperluanInput');
+
+                    // Show the input field if "Lainnya" is selected, otherwise hide it
+                    if (selectedValue === 'Lainnya') {
+                        statusInputDiv.style.display = 'block';
+                    } else {
+                        statusInputDiv.style.display = 'none';
+                    }
+                });
+            </script>
+             
             <button type="submit" class="btn-submit">Kirim</button>
         </form>
     </div>
