@@ -30,6 +30,7 @@
                 <label for="nohp" class="form-label">No Hp</label>
                 <input type="text" class="form-control" id="nohp" placeholder="Masukkan no hp anda" required>
             </div>
+
             <div class="mb-3">
                 <label for="pekerjaan" class="form-label" id="pekerjaan_anda">Pekerjaan Anda</label>
                 <select class="form-select" id="pekerjaan" required>
@@ -37,8 +38,13 @@
                     <option value="PNS">PNS</option>
                     <option value="Swasta">Non PNS</option>
                     <option value="Mahasiswa">Mahasiswa</option>
-                    <option value="Pekerjaan_lainnya">Lainnya</option>
+                    <option value="Lainnya">Lainnya</option>
                 </select>
+            </div>
+
+            <div class="mb-3" id="additionalInput" style="display: none;">
+                <label for="additionalInfo" class="form-label">Detail Pekerjaan</label>
+                <input type="text" class="form-control" id="additionalInfo" placeholder="Masukkan detail pekerjaan...">
             </div>
             
             <div class="mb-3" id="additionalInput2" style="display: none;">
@@ -51,12 +57,6 @@
                     <option value="OPD_kabupaten">OPD Kabupaten/Kota</option>
                 </select>
             </div>
-
-            <div class="mb-3" id="additionalInput" style="display: none;">
-                <label for="additionalInfo" class="form-label">Detail Pekerjaan</label>
-                <input type="text" class="form-control" id="additionalInfo" placeholder="Masukkan detail pekerjaan...">
-            </div>
-
 
             <div class="mb-3">
                 <label for="keperluan" class="form-label" id="keperluan_anda">Keperluan Anda</label>
@@ -78,40 +78,6 @@
                 <input type="text" class="form-control" id="keperluanDetail" placeholder="Masukkan detail keperluan anda...">
             </div>
 
-            <script>
-                document.getElementById('pekerjaan').addEventListener('change', function()
-                {
-                    var selectedValue = this.value;
-                    var additionalInputDiv = document.getElementById('additionalInput');
-                    var additionalInputDiv2 = document.getElementById('additionalInput2');
-
-                    // Show the input field if "Pekerjaan Lainnya" or "PNS" is selected, otherwise hide it
-                    if (selectedValue === 'Pekerjaan_lainnya') {
-                        additionalInputDiv.style.display = 'block';
-                        additionalInputDiv2.style.display = 'none';
-                    } else if (selectedValue === 'PNS') {
-                        additionalInputDiv2.style.display = 'block';
-                        additionalInputDiv.style.display = 'none';
-                    } else {
-                        additionalInputDiv.style.display = 'none';
-                        additionalInputDiv2.style.display = 'none';
-                    }
-                });
-
-                document.getElementById('keperluan').addEventListener('change', function() 
-                {
-                    var selectedValue = this.value;
-                    var statusInputDiv = document.getElementById('keperluanInput');
-
-                    // Show the input field if "Lainnya" is selected, otherwise hide it
-                    if (selectedValue === 'Lainnya') {
-                        statusInputDiv.style.display = 'block';
-                    } else {
-                        statusInputDiv.style.display = 'none';
-                    }
-                });
-            </script>
-             
             <button type="submit" class="btn-submit">Kirim</button>
         </form>
     </div>
