@@ -1,25 +1,33 @@
-document.getElementById('pekerjaan').addEventListener('change', function() {
-    var selectedValue = this.value; // Nilai yang dipilih
-    // var detailPekerjaan = document.getElementById('detailPekerjaan'); // Elemen detail pekerjaan
-    // var detailPekerjaanSpesifik = document.getElementById('detailPekerjaanSpesifik');
+const pekerjaanSelect = document.getElementById('pekerjaan');
+const detailPekerjaan = document.getElementById('detailPekerjaan');
+const detailPekerjaanSpesifik = document.getElementById('detailPekerjaanSpesifik');
 
-    // // Show the input field if "Pekerjaan Lainnya" or "PNS" is selected, otherwise hide it
-    // if (selectedValue === 'Lainnya') {
-    //     detailPekerjaan.style.display = 'block';
-    //     detailPekerjaanSpesifik.style.display = 'none';
-    // } else if (selectedValue === 'PNS') {
-    //     detailPekerjaanSpesifik.style.display = 'block';
-    //     detailPekerjaan.style.display = 'none';
-    // } else {
-    //     detailPekerjaan.style.display = 'none';
-    //     detailPekerjaanSpesifik.style.display = 'none';
-    // }
+// ketika pekerjaan di pilih
+pekerjaanSelect.addEventListener('change', () => {
+    // ambil nilainya kemudian simpan kedalam variable selectedValue
+    const selectedValue = pekerjaanSelect.value;
+
+    if (selectedValue === 'PNS') {
+        // jika nilainya berupa pns
+        detailPekerjaan.style.display = 'block';
+        detailPekerjaanSpesifik.style.display = 'none';
+
+    } else if (selectedValue === 'Lainnya') {
+        // jika nilainnya Lainnya
+        detailPekerjaan.style.display = 'none';
+        detailPekerjaanSpesifik.style.display = 'block';
+
+    } else {
+        // Jika tidak ada yg dipilih
+        detailPekerjaan.style.display = 'none';
+        detailPekerjaanSpesifik.style.display = 'none';
+    }
 });
 
 // Event listener untuk pilihan keperluan
 document.getElementById('keperluan').addEventListener('change', function() {
-    var selectedValue = this.value; // Nilai yang dipilih
-    var keperluanInput = document.getElementById('keperluanInput'); // Elemen detail keperluan
+    const selectedValue = this.value; // Nilai yang dipilih
+    const keperluanInput = document.getElementById('keperluanInput'); // Elemen detail keperluan
 
     // Tampilkan input untuk detail keperluan jika pilihan adalah 'Lainnya'
     if (selectedValue === 'Lainnya') {

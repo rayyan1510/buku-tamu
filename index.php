@@ -7,10 +7,11 @@
     <title>Sistem Informasi Buku Tamu</title>
     <!-- Link Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="./assets/css/style.css">
-
     <!-- google font -->
     <link href="https://fonts.googleapis.com/css2?family=Exo:wght@400;700&family=Roboto:wght@400;500&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="./assets/css/bukutamu.css">
+
 </head>
 
 <body>
@@ -25,19 +26,19 @@
             <!-- Nama -->
             <div class="mb-3">
                 <label for="nama" class="form-label">Nama</label>
-                <input type="text" class="form-control" id="nama" placeholder="Masukkan nama anda" aria-labelledby="Masukkan nama Anda" required>
+                <input type="text" class="form-control" id="nama" name="nama_tamu" placeholder="Masukkan nama anda" aria-labelledby="Masukkan nama Anda" required>
             </div>
 
             <!-- Nomor Telepon -->
             <div class="mb-3">
                 <label for="nohp" class="form-label">No Hp</label>
-                <input type="tel" class="form-control" id="nohp" placeholder="Masukkan no hp anda" required>
+                <input type="tel" class="form-control" id="nohp" name="no_telp" placeholder="Masukkan no hp anda" required>
             </div>
 
             <!-- Pekerjaan -->
             <div class="mb-3">
-                <label for="pekerjaanAnda" class="form-label">Pekerjaan Anda</label>
-                <select class="form-select" id="pekerjaan" name="pekerjaanAnda" aria-label="Pekerjaan Anda" required>
+                <label for="pekerjaan" class="form-label">Pekerjaan Anda</label>
+                <select class="form-select" id="pekerjaan" name="pekerjaan" required>
                     <option selected disabled>--- Pilih Pekerjaan Anda ---</option>
                     <option value="PNS">PNS</option>
                     <option value="Swasta">Non PNS</option>
@@ -46,16 +47,10 @@
                 </select>
             </div>
 
-            <!-- Detail Pekerjaan Spesifik-->
-            <div class="mb-3" id="detailPekerjaanSpesifik" style="display: none;">
-                <label for="detailPekerjaanSpesifik" class="form-label">Detail Pekerjaan</label>
-                <input type="text" class="form-control" id="detailPekerjaanSpesifik" placeholder="Masukkan detail pekerjaan anda...">
-            </div>
-
-            <!-- Detail Pekerjaan -->
+            <!-- Detail Pekerjaan (Select) -->
             <div class="mb-3" id="detailPekerjaan" style="display: none;">
-                <label for="detailPekerjaan" class="form-label">Detail Pekerjaan</label>
-                <select class="form-select" id="detailPekerjaanSelect" name="detailPekerjaan" aria-label="Detail Pekerjaan" required>
+                <label for="detailPekerjaanSelect" class="form-label">Detail Pekerjaan</label>
+                <select class="form-select" id="detailPekerjaanSelect" name="detailPekerjaan">
                     <option selected disabled>--- Pilih Detail Pekerjaan Anda ---</option>
                     <option value="Kementerian">Kementerian/ Lembaga Pemerintah Non Kementerian</option>
                     <option value="OPD">OPD Provinsi SUMUT</option>
@@ -64,11 +59,16 @@
                 </select>
             </div>
 
+            <!-- Detail Pekerjaan (Input) -->
+            <div class="mb-3" id="detailPekerjaanSpesifik" style="display: none;">
+                <label for="detailPekerjaanInput" class="form-label">Detail Pekerjaan</label>
+                <input type="text" class="form-control" id="detailPekerjaanInput" name="detailPekerjaanSpesifik" placeholder="Masukkan detail pekerjaan anda...">
+            </div>
 
             <!-- Keperluan -->
             <div class="mb-3">
-                <label for="keperluan" class="form-label" id="keperluan">Keperluan Anda</label>
-                <select class="form-select" id="keperluan" name="keperluan" aria-label="Keperluan Anda" required>
+                <label for="keperluan" class="form-label">Keperluan Anda</label>
+                <select class="form-select" id="keperluan" name="keperluan" required>
                     <option selected disabled>--- Pilih Keperluan Anda ---</option>
                     <option value="Kunjungan-dinas">Kunjungan Dinas</option>
                     <option value="Kunjungan-non-dinas">Kunjungan Non Dinas</option>
@@ -84,7 +84,7 @@
             <!-- Keperluan lebih lanjut -->
             <div class="mb-3" id="keperluanInput" style="display: none;">
                 <label for="keperluanDetail" class="form-label">Detail Keperluan</label>
-                <input type="text" class="form-control" id="keperluanDetail" placeholder="Masukkan detail keperluan anda...">
+                <input type="text" class="form-control" id="keperluanDetail" name="keperluanInput" placeholder="Masukkan detail keperluan anda...">
             </div>
 
             <button type="submit" class="btn-submit">Kirim</button>

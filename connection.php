@@ -1,10 +1,20 @@
 <?php
+// Konfigurasi database
+$host     = "localhost"; // Nama host, biasanya "localhost"
+$username = "root";      // Nama pengguna database
+$password = "";          // Kata sandi database
+$dbname   = "buku_tamu"; // Nama database Anda
 
-$conn = mysqli_connect('localhost', 'root', '', 'buku_tamu');
+// Membuat koneksi ke database
+$koneksi = new mysqli($host, $username, $password, $dbname);
 
-if ($conn == true) {
-    # code...
-    echo "Berhasil terkoneksi";
+// Periksa koneksi
+if ($koneksi->connect_error) {
+    die("Koneksi gagal: " . $koneksi->connect_error);
 }
-echo "<br>";
-var_dump($conn);
+
+// Jika koneksi berhasil
+echo "Koneksi berhasil!";
+
+// (Opsional) Tutup komentar di bawah untuk menyembunyikan pesan koneksi berhasil
+// echo "";

@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Waktu pembuatan: 08 Jan 2025 pada 04.14
+-- Waktu pembuatan: 15 Jan 2025 pada 09.43
 -- Versi server: 10.4.32-MariaDB
--- Versi PHP: 8.0.30
+-- Versi PHP: 8.2.12
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -20,28 +20,6 @@ SET time_zone = "+00:00";
 --
 -- Database: `buku_tamu`
 --
-
--- --------------------------------------------------------
-
---
--- Struktur dari tabel `jenis_tamu`
---
-
-CREATE TABLE `jenis_tamu` (
-  `id_jenisTamu` int(11) NOT NULL,
-  `jenis_tamu` varchar(50) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
--- --------------------------------------------------------
-
---
--- Struktur dari tabel `keperluan`
---
-
-CREATE TABLE `keperluan` (
-  `id_keperluan` int(11) NOT NULL,
-  `deskripsi` varchar(255) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -98,31 +76,16 @@ INSERT INTO `user` (`id_user`, `username`, `password`, `nama`, `jabatan`) VALUES
 --
 
 --
--- Indeks untuk tabel `jenis_tamu`
---
-ALTER TABLE `jenis_tamu`
-  ADD PRIMARY KEY (`id_jenisTamu`);
-
---
--- Indeks untuk tabel `keperluan`
---
-ALTER TABLE `keperluan`
-  ADD PRIMARY KEY (`id_keperluan`);
-
---
 -- Indeks untuk tabel `kunjungan`
 --
 ALTER TABLE `kunjungan`
-  ADD PRIMARY KEY (`id_kunjungan`),
-  ADD KEY `id_tamu` (`id_tamu`);
+  ADD PRIMARY KEY (`id_kunjungan`);
 
 --
 -- Indeks untuk tabel `tamu`
 --
 ALTER TABLE `tamu`
-  ADD PRIMARY KEY (`id_tamu`),
-  ADD KEY `id_keperluan` (`id_keperluan`),
-  ADD KEY `id_jenisTamu` (`id_jenisTamu`);
+  ADD PRIMARY KEY (`id_tamu`);
 
 --
 -- Indeks untuk tabel `user`
@@ -133,18 +96,6 @@ ALTER TABLE `user`
 --
 -- AUTO_INCREMENT untuk tabel yang dibuang
 --
-
---
--- AUTO_INCREMENT untuk tabel `jenis_tamu`
---
-ALTER TABLE `jenis_tamu`
-  MODIFY `id_jenisTamu` int(11) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT untuk tabel `keperluan`
---
-ALTER TABLE `keperluan`
-  MODIFY `id_keperluan` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT untuk tabel `kunjungan`
@@ -173,13 +124,6 @@ ALTER TABLE `user`
 --
 ALTER TABLE `kunjungan`
   ADD CONSTRAINT `kunjungan_ibfk_1` FOREIGN KEY (`id_tamu`) REFERENCES `tamu` (`id_tamu`);
-
---
--- Ketidakleluasaan untuk tabel `tamu`
---
-ALTER TABLE `tamu`
-  ADD CONSTRAINT `tamu_ibfk_1` FOREIGN KEY (`id_keperluan`) REFERENCES `keperluan` (`id_keperluan`),
-  ADD CONSTRAINT `tamu_ibfk_2` FOREIGN KEY (`id_jenisTamu`) REFERENCES `jenis_tamu` (`id_jenisTamu`);
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
