@@ -30,6 +30,7 @@
                 <label for="nohp" class="form-label">No Hp</label>
                 <input type="text" class="form-control" id="nohp" placeholder="Masukkan no hp anda" required>
             </div>
+
             <div class="mb-3">
                 <label for="pekerjaan" class="form-label" id="pekerjaan_anda">Pekerjaan Anda</label>
                 <select class="form-select" id="pekerjaan" required>
@@ -37,10 +38,18 @@
                     <option value="PNS">PNS</option>
                     <option value="Swasta">Non PNS</option>
                     <option value="Mahasiswa">Mahasiswa</option>
-                    <option value="Pekerjaan_lainnya">Lainnya</option>
+                    <option value="Lainnya">Lainnya</option>
                 </select>
             </div>
 
+<<<<<<< HEAD
+=======
+            <div class="mb-3" id="additionalInput" style="display: none;">
+                <label for="additionalInfo" class="form-label">Detail Pekerjaan</label>
+                <input type="text" class="form-control" id="additionalInfo" placeholder="Masukkan detail pekerjaan...">
+            </div>
+            
+>>>>>>> 2bf89deeffd11bba5a7fd547424da6269cbc9f0e
             <div class="mb-3" id="additionalInput2" style="display: none;">
                 <label for="additionalInfo2" class="form-label">Detail Pekerjaan</label>
                 <select class="form-select" id="additionalInfo2">
@@ -51,12 +60,6 @@
                     <option value="OPD_kabupaten">OPD Kabupaten/Kota</option>
                 </select>
             </div>
-
-            <div class="mb-3" id="additionalInput" style="display: none;">
-                <label for="additionalInfo" class="form-label">Detail Pekerjaan</label>
-                <input type="text" class="form-control" id="additionalInfo" placeholder="Masukkan detail pekerjaan...">
-            </div>
-
 
             <div class="mb-3">
                 <label for="keperluan" class="form-label" id="keperluan_anda">Keperluan Anda</label>
