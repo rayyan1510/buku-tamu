@@ -27,6 +27,7 @@
                 <label for="nama" class="form-label">Nama</label>
                 <input type="text" class="form-control" id="nama" placeholder="Masukkan nama anda" aria-labelledby="Masukkan nama Anda" required>
             </div>
+
             <!-- Nomor Telepon -->
             <div class="mb-3">
                 <label for="nohp" class="form-label">No Hp</label>
@@ -36,7 +37,7 @@
             <!-- Pekerjaan -->
             <div class="mb-3">
                 <label for="pekerjaanAnda" class="form-label">Pekerjaan Anda</label>
-                <select class="form-select" id="pekerjaanAnda" name="pekerjaanAnda" aria-label="Pekerjaan Anda" required>
+                <select class="form-select" id="pekerjaan" name="pekerjaanAnda" aria-label="Pekerjaan Anda" required>
                     <option selected disabled>--- Pilih Pekerjaan Anda ---</option>
                     <option value="PNS">PNS</option>
                     <option value="Swasta">Non PNS</option>
@@ -45,14 +46,14 @@
                 </select>
             </div>
 
+            <!-- Detail Pekerjaan Spesifik-->
             <div class="mb-3" id="detailPekerjaanSpesifik" style="display: none;">
-                <!-- Detail Pekerjaan Spesifik-->
                 <label for="detailPekerjaanSpesifik" class="form-label">Detail Pekerjaan</label>
                 <input type="text" class="form-control" id="detailPekerjaanSpesifik" placeholder="Masukkan detail pekerjaan anda...">
             </div>
 
+            <!-- Detail Pekerjaan -->
             <div class="mb-3" id="detailPekerjaan" style="display: none;">
-                <!-- Detail Pekerjaan -->
                 <label for="detailPekerjaan" class="form-label">Detail Pekerjaan</label>
                 <select class="form-select" id="detailPekerjaanSelect" name="detailPekerjaan" aria-label="Detail Pekerjaan" required>
                     <option selected disabled>--- Pilih Detail Pekerjaan Anda ---</option>
