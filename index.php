@@ -36,8 +36,8 @@
 
             <!-- Pekerjaan -->
             <div class="mb-3">
-                <label for="pekerjaanAnda" class="form-label">Pekerjaan Anda</label>
-                <select class="form-select" id="pekerjaan" name="pekerjaanAnda" aria-label="Pekerjaan Anda" required>
+                <label for="pekerjaan" class="form-label" id="pekerjaan_anda">Pekerjaan Anda</label>
+                <select class="form-select" id="pekerjaan_tamu" required>
                     <option selected disabled>--- Pilih Pekerjaan Anda ---</option>
                     <option value="PNS">PNS</option>
                     <option value="Swasta">Non PNS</option>
@@ -45,11 +45,11 @@
                     <option value="Lainnya">Lainnya</option>
                 </select>
             </div>
-
+            
             <!-- Detail Pekerjaan Spesifik-->
-            <div class="mb-3" id="detailPekerjaanSpesifik" style="display: none;">
-                <label for="detailPekerjaanSpesifik" class="form-label">Detail Pekerjaan</label>
-                <input type="text" class="form-control" id="detailPekerjaanSpesifik" placeholder="Masukkan detail pekerjaan anda...">
+            <div class="mb-3" id="detailPekerjaan" style="display: none;">
+                <label for="detailPekerjaan" class="form-label">Detail Pekerjaan</label>
+                <input type="text" class="form-control" id="isiDetail" placeholder="Masukkan detail pekerjaan...">
             </div>
 
             <!-- Detail Pekerjaan -->

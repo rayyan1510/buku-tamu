@@ -1,19 +1,13 @@
-document.getElementById('pekerjaan').addEventListener('change', function() {
-    var selectedValue = this.value; // Nilai yang dipilih
-    // var detailPekerjaan = document.getElementById('detailPekerjaan'); // Elemen detail pekerjaan
-    // var detailPekerjaanSpesifik = document.getElementById('detailPekerjaanSpesifik');
+document.getElementById('pekerjaan_tamu').addEventListener('change', function() {
+    var selectedValue = this.value;
+    var detailPekerjaan = document.getElementById('detailPekerjaan');
 
-    // // Show the input field if "Pekerjaan Lainnya" or "PNS" is selected, otherwise hide it
-    // if (selectedValue === 'Lainnya') {
-    //     detailPekerjaan.style.display = 'block';
-    //     detailPekerjaanSpesifik.style.display = 'none';
-    // } else if (selectedValue === 'PNS') {
-    //     detailPekerjaanSpesifik.style.display = 'block';
-    //     detailPekerjaan.style.display = 'none';
-    // } else {
-    //     detailPekerjaan.style.display = 'none';
-    //     detailPekerjaanSpesifik.style.display = 'none';
-    // }
+    // Show the input field if "Lainnya" is selected, otherwise hide it
+    if (selectedValue === 'Lainnya') {
+        detailPekerjaan.style.display = 'block';
+    } else {
+        detailPekerjaan.style.display = 'none';
+    }
 });
 
 // Event listener untuk pilihan keperluan
