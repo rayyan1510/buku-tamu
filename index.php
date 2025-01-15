@@ -7,7 +7,7 @@
     <title>Sistem Informasi Buku Tamu</title>
     <!-- Link Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="assets/css/style.css">
 
     <!-- google font -->
     <link href="https://fonts.googleapis.com/css2?family=Exo:wght@400;700&family=Roboto:wght@400;500&display=swap" rel="stylesheet">
@@ -40,7 +40,7 @@
                     <option value="Pekerjaan_lainnya">Lainnya</option>
                 </select>
             </div>
-            
+
             <div class="mb-3" id="additionalInput2" style="display: none;">
                 <label for="additionalInfo2" class="form-label">Detail Pekerjaan</label>
                 <select class="form-select" id="additionalInfo2">
@@ -78,40 +78,6 @@
                 <input type="text" class="form-control" id="keperluanDetail" placeholder="Masukkan detail keperluan anda...">
             </div>
 
-            <script>
-                document.getElementById('pekerjaan').addEventListener('change', function()
-                {
-                    var selectedValue = this.value;
-                    var additionalInputDiv = document.getElementById('additionalInput');
-                    var additionalInputDiv2 = document.getElementById('additionalInput2');
-
-                    // Show the input field if "Pekerjaan Lainnya" or "PNS" is selected, otherwise hide it
-                    if (selectedValue === 'Pekerjaan_lainnya') {
-                        additionalInputDiv.style.display = 'block';
-                        additionalInputDiv2.style.display = 'none';
-                    } else if (selectedValue === 'PNS') {
-                        additionalInputDiv2.style.display = 'block';
-                        additionalInputDiv.style.display = 'none';
-                    } else {
-                        additionalInputDiv.style.display = 'none';
-                        additionalInputDiv2.style.display = 'none';
-                    }
-                });
-
-                document.getElementById('keperluan').addEventListener('change', function() 
-                {
-                    var selectedValue = this.value;
-                    var statusInputDiv = document.getElementById('keperluanInput');
-
-                    // Show the input field if "Lainnya" is selected, otherwise hide it
-                    if (selectedValue === 'Lainnya') {
-                        statusInputDiv.style.display = 'block';
-                    } else {
-                        statusInputDiv.style.display = 'none';
-                    }
-                });
-            </script>
-             
             <button type="submit" class="btn-submit">Kirim</button>
         </form>
     </div>
@@ -120,7 +86,7 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
 
     <!-- Script JS -->
-    <script src="script.js"></script>
+    <script src="./assets/js/script.js"></script>
 </body>
 
 </html>
