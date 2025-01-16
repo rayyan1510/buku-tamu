@@ -32,7 +32,7 @@
             <!-- Nomor Telepon -->
             <div class="mb-3">
                 <label for="nohp" class="form-label">No Hp</label>
-                <input type="tel" class="form-control" id="nohp" name="no_telp" placeholder="Masukkan no hp anda" required>
+                <input type="tel" class="form-control" id="nohp" name="no_hp" placeholder="Masukkan no hp anda" required>
             </div>
 
             <!-- Pekerjaan -->
@@ -51,11 +51,11 @@
             <div class="mb-3" id="detailPekerjaan" style="display: none;">
                 <label for="detailPekerjaanSelect" class="form-label">Detail Pekerjaan</label>
                 <select class="form-select" id="detailPekerjaanSelect" name="detailPekerjaan">
-                    <option selected disabled>--- Pilih Detail Pekerjaan Anda ---</option>
+                    <option selected disabled value="">--- Pilih Detail Pekerjaan Anda ---</option>
                     <option value="Kementerian">Kementerian/ Lembaga Pemerintah Non Kementerian</option>
-                    <option value="OPD">OPD Provinsi SUMUT</option>
-                    <option value="OPD_lain">OPD Provinsi Lain</option>
-                    <option value="OPD_kabupaten">OPD Kabupaten/Kota</option>
+                    <option value="OPD Prov Sumut">OPD Provinsi SUMUT</option>
+                    <option value="OPD Provinsi Lain">OPD Provinsi Lain</option>
+                    <option value="OPD Kabupaten/Kota">OPD Kabupaten/Kota</option>
                 </select>
             </div>
 
@@ -69,7 +69,7 @@
             <div class="mb-3">
                 <label for="keperluan" class="form-label">Keperluan Anda</label>
                 <select class="form-select" id="keperluan" name="keperluan" required>
-                    <option selected disabled>--- Pilih Keperluan Anda ---</option>
+                    <option selected disabled value="">--- Pilih Keperluan Anda ---</option>
                     <option value="Kunjungan-dinas">Kunjungan Dinas</option>
                     <option value="Kunjungan-non-dinas">Kunjungan Non Dinas</option>
                     <option value="Konsultasi">Konsultasi</option>
