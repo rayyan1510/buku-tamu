@@ -70,13 +70,13 @@
                 <label for="keperluan" class="form-label">Keperluan Anda</label>
                 <select class="form-select" id="keperluan" name="keperluan" required>
                     <option selected disabled value="">--- Pilih Keperluan Anda ---</option>
-                    <option value="Kunjungan-dinas">Kunjungan Dinas</option>
-                    <option value="Kunjungan-non-dinas">Kunjungan Non Dinas</option>
+                    <option value="Kunjungan Dinas">Kunjungan Dinas</option>
+                    <option value="Kunjungan non Dinas">Kunjungan Non Dinas</option>
                     <option value="Konsultasi">Konsultasi</option>
-                    <option value="Permohonan-informasi-PPID">Permohonan Informasi PPID</option>
-                    <option value="Permohonan-informasi-PB">Permohonan Informasi PB/PB UMKU</option>
-                    <option value="Pengurusan-PB-UMKU">Pengurusan PB/PB UMKU</option>
-                    <option value="Pengaduan_masyarakat">Pengaduan Masyarakat</option>
+                    <option value="Permohonan informasi PPID">Permohonan Informasi PPID</option>
+                    <option value="Permohonan informasi PB">Permohonan Informasi PB/PB UMKU</option>
+                    <option value="Pengurusan PB UMKU">Pengurusan PB/PB UMKU</option>
+                    <option value="Pengaduan masyarakat">Pengaduan Masyarakat</option>
                     <option value="Lainnya">Lainnya</option>
                 </select>
             </div>
