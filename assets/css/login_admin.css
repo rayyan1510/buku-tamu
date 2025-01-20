@@ -11,25 +11,25 @@ body {
     justify-content: center;
     align-items: center;
     min-height: 100vh;
-    background: #e3f2fd; /* Biru muda pastel */
-    color: #333;
+    background: #fae5e5; /* Merah muda lembut untuk latar belakang */
+    color: #4d0000; /* Merah gelap untuk teks */
 }
 
 /* Container Styles */
 .container {
     display: flex;
     width: 900px;
-    background: #ffffff; /* Putih bersih */
+    background: #fff5f5; /* Putih dengan sedikit nuansa merah */
     border-radius: 10px;
     overflow: hidden;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Shadow lebih ringan */
-    border: 1px solid #d1e6f1; /* Border biru muda */
+    box-shadow: 0 4px 10px rgba(200, 0, 0, 0.2); /* Shadow lembut dengan warna merah */
+    border: 1px solid #f0b3b3; /* Border merah muda halus */
 }
 
 /* Left Section */
 .left-section {
     flex: 1;
-    background: linear-gradient(135deg, #4f8fd9, #81c0f6); /* Gradasi biru pastel ke biru cerah */
+    background: linear-gradient(135deg, #b30000, #e40f0f); /* Gradasi merah gelap ke merah muda cerah */
     color: #ffffff;
     display: flex;
     flex-direction: column;
@@ -58,8 +58,8 @@ body {
 /* Right Section */
 .right-section {
     flex: 1;
-    background: #ffffff; /* Putih bersih */
-    color: #003366; /* Biru tua untuk teks */
+    background: #fff0f0; /* Putih sedikit merah untuk kontras lembut */
+    color: #660000; /* Merah gelap untuk teks */
     padding: 40px;
     display: flex;
     flex-direction: column;
@@ -67,7 +67,7 @@ body {
 }
 
 .right-section h3 {
-    color: #1e3a8a; /* Biru tua untuk heading */
+    color: #e40d0d; /* Merah medium untuk heading */
     margin-bottom: 20px;
     text-align: center;
     font-size: 26px;
@@ -83,19 +83,19 @@ body {
     width: 100%;
     padding: 12px;
     font-size: 16px;
-    border: 1px solid #66b3ff; /* Biru muda untuk border */
+    border: 1px solid #ff9999; /* Border merah lembut */
     border-radius: 5px;
     outline: none;
     transition: border 0.3s;
 }
 
 .form-group input:focus {
-    border-color: #4f8fd9; /* Biru pastel saat fokus */
-    box-shadow: 0 0 5px rgba(79, 143, 217, 0.5); /* Glowing fokus */
+    border-color: #ff6666; /* Merah cerah untuk fokus */
+    box-shadow: 0 0 5px rgba(255, 102, 102, 0.5); /* Glowing merah */
 }
 
 .form-group input::placeholder {
-    color: #999; /* Placeholder warna lembut */
+    color: #cc6666; /* Placeholder merah pastel */
 }
 
 /* Remember Me Section */
@@ -103,21 +103,21 @@ body {
     display: flex;
     align-items: center;
     font-size: 14px;
-    color: #555;
+    color: #660000; /* Merah gelap */
 }
 
 .remember-me input[type="checkbox"] {
     width: 18px;
     height: 18px;
     margin-right: 10px;
-    accent-color: #003366; /* Biru tua untuk checkbox */
+    accent-color: #b30000; /* Merah medium */
 }
 
 /* Button Styles */
 .btn-login {
     width: 100%;
     padding: 12px;
-    background: linear-gradient(135deg, #66b3ff, #4f8fd9); /* Gradasi biru pastel */
+    background: linear-gradient(135deg, #cc0000, #ff4d4d); /* Gradasi merah gelap ke merah terang */
     color: #ffffff;
     border: none;
     border-radius: 5px;
@@ -128,7 +128,7 @@ body {
 }
 
 .btn-login:hover {
-    background: linear-gradient(135deg, #4f8fd9, #66b3ff); /* Gradasi terbalik saat hover */
+    background: linear-gradient(135deg, #990000, #ff3333); /* Gradasi merah gelap lebih kuat */
     transform: scale(1.05); /* Efek memperbesar */
 }
 
@@ -137,5 +137,5 @@ body {
     margin-top: 20px;
     font-size: 12px;
     text-align: center;
-    color: #aaa;
+    color: #994d4d; /* Merah pastel gelap */
 }
