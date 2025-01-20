@@ -1,16 +1,18 @@
 <?php
-
-
 // include koneksi
 require_once 'connection.php';
+
+// session start
+session_start();
 
 // cek jika ada di set $_post
 if (isset($_POST) == true) {
 
+    $nik = htmlspecialchars($_POST['nik_tamu']);
     $nama_tamu = $_POST['nama_tamu'];
     $no_hp = $_POST['no_hp'];
-    // pekerjaan (PNS, NON PNS, MAHASISWA, LAINNYA)
 
+    // pekerjaan (PNS, NON PNS, MAHASISWA, LAINNYA)
     $jenis_tamu = $_POST['pekerjaan'];
 
     // tampung perkerjaan
@@ -66,11 +68,12 @@ if (isset($_POST) == true) {
 
     try {
         // 1. Insert ke table 'tamu' menggunakan prepared statment
-        $queryInsertTamu = "INSERT INTO tamu (nama_tamu, no_hp, keperluan, jenis_tamu)  VALUES (?, ?, ?, ?)";
+        $queryInsertTamu = "INSERT INTO tamu (nik, nama_tamu, no_hp, keperluan, jenis_tamu)  VALUES (?, ?, ?, ?, ?)";
         $stmtTamu = mysqli_prepare($koneksi, $queryInsertTamu);
         mysqli_stmt_bind_param(
             $stmtTamu,
-            "ssss",
+            "sssss",
+            $nik,
             $nama_tamu,
             $no_hp,
             $tujuan,
@@ -91,27 +94,53 @@ if (isset($_POST) == true) {
         // Commit transaksi
         mysqli_commit($koneksi);
 
-        echo "<script>
-                window.alert('data tamu kamu berhasil ditambahkan');
-                window.location.href = 'index.php';
-            </script>";
+
+        // buat session untuk menampilkan pesan sukses
+        $_SESSION['success_message'] = "Data tamu berhasil ditambahkan!";
+
+        // echo "<script>
+        //         Swal.fire({
+        //             title: 'Berhasil!',
+        //             text: 'Data tamu berhasil ditambahkan.',
+        //             icon: 'success',
+        //             confirmButtonText: 'OK'
+        //         }).then((result) => {
+        //             if (result.isConfirmed) {
+        //                 window.location.href = 'index.php';
+        //             }
+        //         });
+        //       </script>";
     } catch (Exception $e) {
         // Rollback jika terjadi error
         mysqli_rollback($koneksi);
-        echo "Gagal menyimpan data: " . $e->getMessage();
-        echo "<script>
-        window.alert('Gagal menambahkan data tamu. Silakan coba lagi.');
-        window.location.href = 'index.php';
-        </script>";
+
+        // buat session untuk menampilkan pesan yang gagal
+        $_SESSION['error_message'] = "Gagal menyimpan data tamu. Silakan coba lagi.";
+
+
+
+        // echo "Gagal menyimpan data: " . $e->getMessage();
+
+        // echo "<script>
+        //         Swal.fire({
+        //             title: 'Gagal!',
+        //             text: 'Gagal menyimpan data tamu. Silakan coba lagi.',
+        //             icon: 'error',
+        //             confirmButtonText: 'OK'
+        //         }).then((result) => {
+        //             if (result.isConfirmed) {
+        //                 window.location.href = 'index.php';
+        //             }
+        //         });
+        //       </script>";
     }
 
     // Tutup statement dan koneksi
     mysqli_stmt_close($stmtTamu);
     mysqli_stmt_close($stmtKunjungan);
     mysqli_close($koneksi);
-} else {
-    echo "<script>
-                window.alert('kamu blm menginputkan data tamu. Silakan coba lagi.');
-                window.location.href = 'index.php';
-            </script>";
+
+    // redirect ke form buku tamu
+    header("Location: index.php");
+    exit();
 }

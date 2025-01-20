@@ -6,11 +6,11 @@ include 'connection.php';
 $id_tamu = $_GET['id'] ?? null;
 
 if (!$id_tamu) {
-    echo "<script>
+  echo "<script>
             alert('ID tamu tidak ditemukan.');
             window.location.href = 'table-tamu.php';
           </script>";
-    exit;
+  exit;
 }
 
 // Query untuk mengambil data tamu berdasarkan ID
@@ -25,11 +25,11 @@ $result = $stmt->get_result();
 $data = $result->fetch_assoc();
 
 if (!$data) {
-    echo "<script>
+  echo "<script>
             alert('Data tamu tidak ditemukan.');
             window.location.href = 'table-tamu.php';
           </script>";
-    exit;
+  exit;
 }
 
 // Buat instance TCPDF
@@ -134,7 +134,7 @@ Dengan ini disampaikan bahwa pada tanggal <b>$tanggal</b>, telah menerima kunjun
 <td>{$data['jenis_tamu']}</td>
 </tr>
 </table>
-<br>
+<br><br>
 
 Demikian surat ini dibuat sebagai tanda bukti kunjungan.<br><br>
 EOD;
@@ -142,7 +142,7 @@ $pdf->SetXY(20, 90);
 $pdf->writeHTML($isiSurat, true, false, false, false, 'L');
 
 $ttd = <<<EOD
-Medan, ...............<br>
+<br><br><br><br>Medan, ...............<br>
 KEPALA DINAS PENANAMAN MODAL DAN <br>
 PELAYANAN TERPADU SATU PINTU<br><br><br><br>
 <u>Dr. H. Faisal Arif Nasution, S.Sos., M.Si</u><br>

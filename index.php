@@ -1,3 +1,5 @@
+<?php session_start(); ?>
+
 <!DOCTYPE html>
 <html lang="id">
 
@@ -5,11 +7,18 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sistem Informasi Buku Tamu</title>
-    <!-- Link Bootstrap CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+
     <!-- google font -->
     <link href="https://fonts.googleapis.com/css2?family=Exo:wght@400;700&family=Roboto:wght@400;500&display=swap" rel="stylesheet">
 
+
+    <!-- Link Bootstrap CSS -->
+    <link href="./assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <!-- link sweetalert -->
+    <link rel="stylesheet" href="./assets/vendor/node_modules/sweetalert2/dist/sweetalert2.min.css">
+    <script src="./assets/vendor/node_modules/sweetalert2/dist/sweetalert2.min.js"></script>
+
+    <!-- my css -->
     <link rel="stylesheet" href="./assets/css/bukutamu.css">
 
 </head>
@@ -22,7 +31,14 @@
         <h3>Sistem Informasi Buku Tamu</h3>
         <p>Ini adalah buku tamu pada DPMPTSP SUMUT</p>
 
-        <form action="./proses_simpan.php" method="POST">
+        <form action="proses_simpan.php" method="POST">
+            <!-- nik -->
+            <div class="mb-3">
+                <label for="nik" class="form-label">Nik</label>
+                <input type="text" class="form-control" id="nik" name="nik_tamu" placeholder="Masukkan nik anda"
+                    aria-labelledby="Masukkan nik Anda" maxlength="16" required>
+            </div>
+
             <!-- Nama -->
             <div class="mb-3">
                 <label for="nama" class="form-label">Nama</label>
@@ -91,11 +107,31 @@
         </form>
     </div>
 
-    <!-- Script JS -->
-    <script src="assets/js/script.js"></script>
+    <script>
+        <?php if (isset($_SESSION['success_message'])): ?>
+            Swal.fire({
+                title: 'Berhasil!',
+                text: '<?php echo $_SESSION['success_message']; ?>',
+                icon: 'success',
+                confirmButtonText: 'OK'
+            });
+            <?php unset($_SESSION['success_message']); ?>
+        <?php elseif (isset($_SESSION['error_message'])): ?>
+            Swal.fire({
+                title: 'Gagal!',
+                text: '<?php echo $_SESSION['error_message']; ?>',
+                icon: 'error',
+                confirmButtonText: 'OK'
+            });
+            <?php unset($_SESSION['error_message']); ?>
+        <?php endif; ?>
+    </script>
 
     <!-- Link Bootstrap JS -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="./assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Script JS -->
+    <script src="assets/js/script.js" defer></script>
 </body>
 
 </html>

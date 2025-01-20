@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Waktu pembuatan: 16 Jan 2025 pada 07.45
+-- Waktu pembuatan: 20 Jan 2025 pada 09.16
 -- Versi server: 10.4.32-MariaDB
 -- Versi PHP: 8.2.12
 
@@ -38,8 +38,10 @@ CREATE TABLE `kunjungan` (
 --
 
 INSERT INTO `kunjungan` (`id_kunjungan`, `tanggal_kunjungan`, `id_tamu`) VALUES
-(1, '2025-01-16', 1),
-(2, '2025-01-16', 2);
+(18, '2025-01-20', 18),
+(19, '2025-01-20', 19),
+(20, '2025-01-20', 20),
+(21, '2025-01-20', 21);
 
 -- --------------------------------------------------------
 
@@ -49,6 +51,7 @@ INSERT INTO `kunjungan` (`id_kunjungan`, `tanggal_kunjungan`, `id_tamu`) VALUES
 
 CREATE TABLE `tamu` (
   `id_tamu` int(11) NOT NULL,
+  `nik` int(16) NOT NULL,
   `nama_tamu` varchar(100) DEFAULT NULL,
   `no_hp` varchar(20) DEFAULT NULL,
   `keperluan` text DEFAULT NULL,
@@ -59,9 +62,11 @@ CREATE TABLE `tamu` (
 -- Dumping data untuk tabel `tamu`
 --
 
-INSERT INTO `tamu` (`id_tamu`, `nama_tamu`, `no_hp`, `keperluan`, `jenis_tamu`) VALUES
-(1, 'mhs', NULL, NULL, 'Mahasiswa'),
-(2, 'mhs', '231234', NULL, 'Mahasiswa');
+INSERT INTO `tamu` (`id_tamu`, `nik`, `nama_tamu`, `no_hp`, `keperluan`, `jenis_tamu`) VALUES
+(18, 15786216, 'rayyan', '085360974655', 'Konsultasi', 'PNS OPD Prov Sumut'),
+(19, 15786216, 'rayyan', '085360974655', 'Permohonan informasi PB', 'Swasta'),
+(20, 15786216, 'rayyan', '085360974655', 'Pengurusan PB UMKU', 'Mahasiswa'),
+(21, 15786216, 'rayyan', '085360974655', 'Permohonan informasi PPID', 'PNS Kementerian');
 
 -- --------------------------------------------------------
 
@@ -95,7 +100,8 @@ INSERT INTO `user` (`id_user`, `username`, `password`, `nama`, `jabatan`) VALUES
 -- Indeks untuk tabel `kunjungan`
 --
 ALTER TABLE `kunjungan`
-  ADD PRIMARY KEY (`id_kunjungan`);
+  ADD PRIMARY KEY (`id_kunjungan`),
+  ADD KEY `kunjungan_ibfk_1` (`id_tamu`);
 
 --
 -- Indeks untuk tabel `tamu`
@@ -117,13 +123,13 @@ ALTER TABLE `user`
 -- AUTO_INCREMENT untuk tabel `kunjungan`
 --
 ALTER TABLE `kunjungan`
-  MODIFY `id_kunjungan` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id_kunjungan` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=22;
 
 --
 -- AUTO_INCREMENT untuk tabel `tamu`
 --
 ALTER TABLE `tamu`
-  MODIFY `id_tamu` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id_tamu` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=22;
 
 --
 -- AUTO_INCREMENT untuk tabel `user`
@@ -139,7 +145,7 @@ ALTER TABLE `user`
 -- Ketidakleluasaan untuk tabel `kunjungan`
 --
 ALTER TABLE `kunjungan`
-  ADD CONSTRAINT `kunjungan_ibfk_1` FOREIGN KEY (`id_tamu`) REFERENCES `tamu` (`id_tamu`);
+  ADD CONSTRAINT `kunjungan_ibfk_1` FOREIGN KEY (`id_tamu`) REFERENCES `tamu` (`id_tamu`) ON DELETE CASCADE ON UPDATE CASCADE;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
