@@ -68,7 +68,7 @@ if (isset($_POST) == true) {
 
     try {
         // 1. Insert ke table 'tamu' menggunakan prepared statment
-        $queryInsertTamu = "INSERT INTO tamu (nik, nama_tamu, no_hp, keperluan, jenis_tamu)  VALUES (?, ?, ?, ?, ?)";
+        $queryInsertTamu = "INSERT INTO tamu (nik, nama_tamu, no_hp, keperluan, jenis_tamu, status_notifikasi) VALUES (?, ?, ?, ?, ?, 1)";
         $stmtTamu = mysqli_prepare($koneksi, $queryInsertTamu);
         mysqli_stmt_bind_param(
             $stmtTamu,

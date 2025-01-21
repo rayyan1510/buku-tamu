@@ -45,7 +45,8 @@ if (!$result) {
 </head>
 
 <body class="hold-transition sidebar-mini layout-fixed">
-    <div class="wrapper"><!-- Navbar -->
+    <div class="wrapper">
+        <!-- Navbar -->
         <nav class="main-header navbar navbar-expand navbar-white navbar-light">
             <!-- Left navbar links -->
             <ul class="navbar-nav">
@@ -142,29 +143,41 @@ if (!$result) {
                     </div>
                 </li>
                 <!-- Notifications Dropdown Menu -->
+                <?php
+                // Hitung jumlah notifikasi baru
+                $queryNotifikasi = "SELECT COUNT(*) AS jumlah_notifikasi FROM tamu WHERE status_notifikasi = 1";
+                $resultNotifikasi = $koneksi->query($queryNotifikasi);
+                $rowNotifikasi = $resultNotifikasi->fetch_assoc();
+                $jumlahNotifikasi = $rowNotifikasi['jumlah_notifikasi'];
+                ?>
+
                 <li class="nav-item dropdown">
                     <a class="nav-link" data-toggle="dropdown" href="#">
                         <i class="far fa-bell"></i>
-                        <span class="badge badge-warning navbar-badge">15</span>
+                        <span class="badge badge-warning navbar-badge"><?= $jumlahNotifikasi; ?></span>
                     </a>
                     <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
-                        <span class="dropdown-header">15 Notifications</span>
+                        <span class="dropdown-header"><?= $jumlahNotifikasi; ?> Notifikasi</span>
                         <div class="dropdown-divider"></div>
-                        <a href="#" class="dropdown-item">
-                            <i class="fas fa-envelope mr-2"></i> 4 new messages
-                            <span class="float-right text-muted text-sm">3 mins</span>
-                        </a>
-                        <div class="dropdown-divider"></div>
-                        <a href="#" class="dropdown-item">
-                            <i class="fas fa-users mr-2"></i> 8 friend requests
-                            <span class="float-right text-muted text-sm">12 hours</span>
-                        </a>
-                        <div class="dropdown-divider"></div>
-                        <a href="#" class="dropdown-item">
-                            <i class="fas fa-file mr-2"></i> 3 new reports
-                            <span class="float-right text-muted text-sm">2 days</span>
-                        </a>
-                        <div class="dropdown-divider"></div>
+
+                        <?php
+                        // Ambil data notifikasi terbaru
+                        $queryDetailNotifikasi = "SELECT nama_tamu, keperluan, tanggal_kunjungan 
+                                  FROM tamu 
+                                  JOIN kunjungan ON tamu.id_tamu = kunjungan.id_tamu 
+                                  WHERE tamu.status_notifikasi = 1 
+                                  ORDER BY kunjungan.tanggal_kunjungan DESC 
+                                  LIMIT 5";
+                        $resultDetail = $koneksi->query($queryDetailNotifikasi);
+                        while ($row = $resultDetail->fetch_assoc()) {
+                            echo '<a href="#" class="dropdown-item">
+                    <i class="fas fa-user mr-2"></i> ' . htmlspecialchars($row['nama_tamu']) . '
+                    <span class="float-right text-muted text-sm">' . htmlspecialchars($row['tanggal_kunjungan']) . '</span>
+                  </a>
+                  <div class="dropdown-divider"></div>';
+                        }
+                        ?>
+
                         <a href="#" class="dropdown-item dropdown-footer">See All Notifications</a>
                     </div>
                 </li>
@@ -244,7 +257,7 @@ if (!$result) {
                         </li>
                         <li class="nav-header">General</li>
                         <li class="nav-item">
-                            <a href="#" class="nav-link">
+                            <a href="./dashboard.php" class="nav-link">
                                 <i class="nav-icon fas fa-home"></i>
                                 <p>
                                     Home
@@ -310,6 +323,7 @@ if (!$result) {
             <!-- /.sidebar -->
         </aside>
 
+        <!-- main content -->
         <div class="content-wrapper">
             <div class="content-header">
                 <div class="container-fluid">
@@ -340,6 +354,12 @@ if (!$result) {
                                         <div class="col-2 mb-2">
                                             <a href="#" class="btn bg-navy color-palette"><i class="fas fa-print"> Cetak</i></a>
                                         </div>
+                                        <div class="col-2 mb-2">
+                                            <a href="#" class="btn bg-green color-palette"><i class="fas fa-print"> Export Excel</i></a>
+                                        </div>
+                                        <div class="col-2 mb-2">
+                                            <a href="#" class="btn bg-blue color-palette"><i class="fas fa-print"> Export Word</i></a>
+                                        </div>
                                     </div>
                                     <table id="example1" class="table table-bordered table-striped">
                                         <thead>
@@ -355,27 +375,27 @@ if (!$result) {
                                         <tbody>
                                             <?php
                                             $no = 1;
-                                            while ($row = $result->fetch_assoc()) {
-                                                echo "<tr>";
-                                                echo "<td>" . $no++ . "</td>";
-                                                echo "<td>" . htmlspecialchars($row['nama_tamu']) . "</td>";
-                                                echo "<td>" . htmlspecialchars($row['instansi']) . "</td>";
-                                                echo "<td>" . htmlspecialchars($row['keperluan']) . "</td>";
-                                                echo "<td>" . htmlspecialchars($row['tanggal_kunjungan']) . "</td>";
-                                                echo "<td>
-                                                        <a href='lihat-data.php?id=" . $row['id_tamu'] . "' class='btn btn-info mb-1'>
-                                                            <i class='fas fa-eye'></i> Lihat Data
+
+                                            while ($row = $result->fetch_assoc()) : ?>
+                                                <tr>
+                                                    <td><?= $no++; ?></td>
+                                                    <td><?= htmlspecialchars($row['nama_tamu']); ?></td>
+                                                    <td><?= htmlspecialchars($row['instansi']); ?></td>
+                                                    <td><?= htmlspecialchars($row['keperluan']); ?></td>
+                                                    <td><?= htmlspecialchars($row['tanggal_kunjungan']); ?></td>
+                                                    <td>
+                                                        <a href="lihat-data.php?id=<?= $row['id_tamu']; ?>" class="btn btn-info mb-1">
+                                                            <i class="fas fa-eye"></i> Lihat Data
                                                         </a>
-                                                        <a href='print-data.php?id=" . $row['id_tamu'] . "' target='_blank' class='btn btn-warning mb-1'>
-                                                            <i class='fas fa-print'></i> Print
+                                                        <a href="print-data.php?id=<?= $row['id_tamu']; ?>" target="_blank" class="btn btn-warning mb-1">
+                                                            <i class="fas fa-print"></i> Print
                                                         </a>
-                                                        <a href='edit-data.php?id=" . $row['id_tamu'] . "' class='btn btn-success'>
-                                                            <i class='fas fa-edit'></i> Edit Data User
+                                                        <a href="edit-data.php?id=<?= $row['id_tamu']; ?>" class="btn btn-success mb-1">
+                                                            <i class="fas fa-edit"></i> Edit Data User
                                                         </a>
-                                                      </td>";
-                                                echo "</tr>";
-                                            }
-                                            ?>
+                                                    </td>
+                                                </tr>
+                                            <?php endwhile; ?>
                                         </tbody>
                                     </table>
                                 </div>
@@ -385,13 +405,16 @@ if (!$result) {
                 </div>
             </div>
         </div>
+        <!-- main content -->
 
+        <!-- footer -->
         <footer class="main-footer">
             <div class="float-right d-none d-sm-inline">
                 Anything you want
             </div>
             <strong>Copyright &copy; <span id="tahun"></span> <a href="https://adminlte.io">AdminLTE.io</a>.</strong> All rights reserved.
         </footer>
+        <!-- end footer -->
     </div>
 
     <!-- custom js -->
@@ -400,6 +423,17 @@ if (!$result) {
         const year = currentDate.getFullYear();
         document.getElementById("tahun").innerHTML = year;
     </script>
+
+    <script>
+        document.querySelector('.nav-item.dropdown').addEventListener('click', function() {
+            fetch('mark_notifications_read.php', {
+                    method: 'POST'
+                })
+                .then(response => response.text())
+                .then(data => console.log(data));
+        });
+    </script>
+
 
     <!-- jQuery -->
     <script src="./assets/vendor/admin-lte/plugins/jquery/jquery.min.js"></script>
@@ -435,6 +469,39 @@ if (!$result) {
     <!-- <script src="./assets/vendor/admin-lte/dist/js/demo.js"></script> -->
     <!-- AdminLTE dashboard demo (This is only for demo purposes) -->
     <script src="./assets/vendor/admin-lte/dist/js/pages/dashboard.js"></script>
+
+    <script>
+        //-------------
+        //- DONUT CHART -
+        //-------------
+        // Get context with jQuery - using jQuery's .get() method.
+        var donutChartCanvas = $('#donutChart').get(0).getContext('2d')
+        var donutData = {
+            labels: [
+                'Chrome',
+                'IE',
+                'FireFox',
+                'Safari',
+                'Opera',
+                'Navigator',
+            ],
+            datasets: [{
+                data: [700, 500, 400, 600, 300, 100],
+                backgroundColor: ['#f56954', '#00a65a', '#f39c12', '#00c0ef', '#3c8dbc', '#d2d6de'],
+            }]
+        }
+        var donutOptions = {
+            maintainAspectRatio: false,
+            responsive: true,
+        }
+        //Create pie or douhnut chart
+        // You can switch between pie and douhnut using the method below.
+        new Chart(donutChartCanvas, {
+            type: 'doughnut',
+            data: donutData,
+            options: donutOptions
+        })
+    </script>
 </body>
 
 </html>

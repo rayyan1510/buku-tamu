@@ -1,3 +1,33 @@
+<?php
+
+// Koneksi ke database
+include './connection.php';
+
+// Mengambil total tamu
+$resultTotal = $koneksi->query("SELECT COUNT(*) AS total_tamu FROM tamu");
+$totalTamu = $resultTotal->fetch_assoc()['total_tamu'];
+
+// Mengambil data kunjungan harian
+$resultHarian = $koneksi->query(
+    "SELECT tanggal_kunjungan, COUNT(*) AS jumlah_kunjungan " .
+        "FROM kunjungan " .
+        "GROUP BY tanggal_kunjungan " .
+        "ORDER BY tanggal_kunjungan"
+);
+
+$tanggal = [];
+$jumlahKunjungan = [];
+while ($row = $resultHarian->fetch_assoc()) {
+    $tanggal[] = $row['tanggal_kunjungan'];
+    $jumlahKunjungan[] = $row['jumlah_kunjungan'];
+}
+
+$koneksi->close();
+
+
+
+?>
+
 <!DOCTYPE html>
 <!--
 This is a starter template page. Use this page to start your new project from
@@ -226,7 +256,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
                         data-accordion="false">
                         <!-- Add icons to the links using the .nav-icon class with font-awesome or any other icon font library -->
                         <li class="nav-item">
-                            <a href="#" class="nav-link active">
+                            <a href="#" class="nav-link">
                                 <i class="nav-icon fas fa-edit"></i>
                                 <p>
                                     Tulis Surat
@@ -235,7 +265,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
                         </li>
                         <li class="nav-header">General</li>
                         <li class="nav-item">
-                            <a href="#" class="nav-link">
+                            <a href="#" class="nav-link active ">
                                 <i class="nav-icon fas fa-home"></i>
                                 <p>
                                     Home
@@ -348,18 +378,43 @@ scratch. This page gets rid of all links and provides the needed markup only.
                             <!-- small box -->
                             <div class="small-box bg-warning">
                                 <div class="inner">
-                                    <h3>44</h3>
+                                    <h3><?= $totalTamu; ?></h3>
 
                                     <p>Total Tamu</p>
                                 </div>
                                 <div class="icon">
                                     <i class="ion ion-person-add"></i>
                                 </div>
-                                <a href="#" class="small-box-footer">More info <i
+                                <a href="./table-tamu.php" class="small-box-footer">More info <i
                                         class="fas fa-arrow-circle-right"></i></a>
                             </div>
                         </div>
                         <!-- ./col -->
+
+                        <!-- col penyebaran keperluan -->
+                        <div class="col-lg-4 col-6">
+                            <!-- DONUT CHART -->
+                            <div class="card card-danger">
+                                <div class="card-header">
+                                    <h3 class="card-title">Donut Chart</h3>
+
+                                    <div class="card-tools">
+                                        <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                                            <i class="fas fa-minus"></i>
+                                        </button>
+                                        <button type="button" class="btn btn-tool" data-card-widget="remove">
+                                            <i class="fas fa-times"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="card-body">
+                                    <canvas id="donutChart" style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%;"></canvas>
+                                </div>
+                                <!-- /.card-body -->
+                            </div>
+                            <!-- /.card -->
+                        </div>
+                        <!-- col penyebaran keperluan -->
                     </div>
                     <!-- /.row -->
 
