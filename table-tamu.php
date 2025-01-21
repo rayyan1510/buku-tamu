@@ -1,13 +1,53 @@
 <?php
 // Hubungkan ke database
-include 'connection.php'; // Gunakan file koneksi yang sudah ada
+include 'connection.php';
 
-// Ambil data dari tabel `tamu` dan `kunjungan` menggunakan JOIN
-$query = "SELECT tamu.id_tamu, tamu.nama_tamu, tamu.jenis_tamu AS instansi, tamu.keperluan, kunjungan.tanggal_kunjungan 
-          FROM tamu
-          JOIN kunjungan ON tamu.id_tamu = kunjungan.id_tamu";
+session_start();
+
+if (!isset($_SESSION['jabatan'])) {
+    header('Location: login_admin.php');
+    exit;
+} else {
+    // header('Location: table-tamu.php');
+}
+
+
+// Ambil parameter GET untuk filter
+$periode = $_GET['periode'] ?? 'all';
+$bulan = $_GET['bulan'] ?? 'all';
+$tahun = $_GET['tahun'] ?? 'all';
+
+// Bangun query dengan kondisi dinamis
+$query = "
+    SELECT tamu.id_tamu, tamu.nik, tamu.nama_tamu, tamu.no_hp, tamu.jenis_tamu AS instansi, tamu.keperluan, kunjungan.tanggal_kunjungan 
+    FROM tamu
+    JOIN kunjungan ON tamu.id_tamu = kunjungan.id_tamu
+";
+
+$conditions = [];
+if ($periode == 'harian') {
+    $conditions[] = "DATE(kunjungan.tanggal_kunjungan) = CURDATE()";
+} elseif ($periode == 'mingguan') {
+    $conditions[] = "YEARWEEK(kunjungan.tanggal_kunjungan, 1) = YEARWEEK(CURDATE(), 1)";
+} elseif ($periode == 'bulanan') {
+    if ($bulan != 'all') {
+        $conditions[] = "MONTH(kunjungan.tanggal_kunjungan) = $bulan";
+    }
+    if ($tahun != 'all') {
+        $conditions[] = "YEAR(kunjungan.tanggal_kunjungan) = $tahun";
+    }
+} elseif ($periode == 'tahunan') {
+    if ($tahun != 'all') {
+        $conditions[] = "YEAR(kunjungan.tanggal_kunjungan) = $tahun";
+    }
+}
+
+if (!empty($conditions)) {
+    $query .= " WHERE " . implode(" AND ", $conditions);
+}
+
+// Eksekusi query
 $result = $koneksi->query($query);
-
 if (!$result) {
     die("Query gagal: " . $koneksi->error);
 }
@@ -19,29 +59,15 @@ if (!$result) {
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Siap Layani - Daftar Tamu</title>
+    <title>Siap Layani</title>
 
     <!-- Google Font: Source Sans Pro -->
     <link rel="stylesheet"
         href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
     <!-- Font Awesome -->
     <link rel="stylesheet" href="./assets/vendor/admin-lte/plugins/fontawesome-free/css/all.min.css">
-    <!-- Ionicons -->
-    <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
-    <!-- Tempusdominus Bootstrap 4 -->
-    <link rel="stylesheet" href="./assets/vendor/admin-lte/plugins/tempusdominus-bootstrap-4/css/tempusdominus-bootstrap-4.min.css">
-    <!-- iCheck -->
-    <link rel="stylesheet" href="./assets/vendor/admin-lte/plugins/icheck-bootstrap/icheck-bootstrap.min.css">
-    <!-- JQVMap -->
-    <link rel="stylesheet" href="./assets/vendor/admin-lte/plugins/jqvmap/jqvmap.min.css">
     <!-- Theme style -->
     <link rel="stylesheet" href="./assets/vendor/admin-lte/dist/css/adminlte.min.css">
-    <!-- overlayScrollbars -->
-    <link rel="stylesheet" href="./assets/vendor/admin-lte/plugins/overlayScrollbars/css/OverlayScrollbars.min.css">
-    <!-- Daterange picker -->
-    <link rel="stylesheet" href="./assets/vendor/admin-lte/plugins/daterangepicker/daterangepicker.css">
-    <!-- summernote -->
-    <link rel="stylesheet" href="./assets/vendor/admin-lte/plugins/summernote/summernote-bs4.min.css">
 </head>
 
 <body class="hold-transition sidebar-mini layout-fixed">
@@ -187,7 +213,7 @@ if (!$result) {
                     <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">
                         <img src="./assets/vendor/admin-lte/dist/img/user2-160x160.jpg" class="user-image img-circle elevation-2"
                             alt="User Image">
-                        <span class="d-none d-md-inline">Alexander Pierce</span>
+                        <span class="d-none d-md-inline"><?= ucwords($_SESSION['nama']); ?></span>
                     </a>
                     <ul class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
                         <!-- User image -->
@@ -195,14 +221,14 @@ if (!$result) {
                             <img src="./assets/vendor/admin-lte/dist/img/user2-160x160.jpg" class="img-circle elevation-2" alt="User Image">
 
                             <p>
-                                Alexander Pierce - Web Developer
+                                <?= ucwords($_SESSION['nama']); ?> - <?= $_SESSION['jabatan']; ?>
                                 <small>Member since Nov. 2012</small>
                             </p>
                         </li>
                         <!-- Menu Footer-->
                         <li class="user-footer">
                             <a href="#" class="btn btn-default btn-flat">Profile</a>
-                            <a href="#" class="btn btn-default btn-flat float-right">Sign out</a>
+                            <a href="./logout.php" class="btn btn-default btn-flat float-right">Sign out</a>
                         </li>
                     </ul>
                 </li>
@@ -237,7 +263,7 @@ if (!$result) {
                     </div>
                     <div class="info">
                         <p class="d-block text-white">Selamat Datang</p>
-                        <a href="#" class="d-block">Alexander Pierce</a>
+                        <a href="#" class="d-block"><?= ucwords($_SESSION['nama']); ?></a>
                     </div>
                 </div>
 
@@ -248,15 +274,6 @@ if (!$result) {
                         data-accordion="false">
                         <!-- Add icons to the links using the .nav-icon class with font-awesome or any other icon font library -->
                         <li class="nav-item">
-                            <a href="#" class="nav-link">
-                                <i class="nav-icon fas fa-edit"></i>
-                                <p>
-                                    Tulis Surat
-                                </p>
-                            </a>
-                        </li>
-                        <li class="nav-header">General</li>
-                        <li class="nav-item">
                             <a href="./dashboard.php" class="nav-link">
                                 <i class="nav-icon fas fa-home"></i>
                                 <p>
@@ -265,57 +282,128 @@ if (!$result) {
                             </a>
                         </li>
 
-                        <!-- LINK Surat Menyurat -->
-                        <li class="nav-item">
-                            <a href="#" class="nav-link">
-                                <i class="nav-icon fas fa-envelope"></i>
-                                <p>
-                                    Surat Menyurat
-                                    <i class="fas fa-angle-left right"></i>
-                                </p>
-                            </a>
+                        <li class="nav-header">General</li>
 
-                            <ul class="nav nav-treeview">
-                                <li class="nav-item">
-                                    <a href="#" class="nav-link active">
-                                        <i class="far fa-circle nav-icon"></i>
-                                        <p>Surat Masuk</p>
-                                    </a>
-                                </li>
+                        <?php
+
+                        if (isset($_SESSION['jabatan'])) {
+                            if ($_SESSION['jabatan'] == 'Fo' or $_SESSION['jabatan'] == 'FO') {
+                        ?>
+
+                                <!-- LINK Layanan -->
                                 <li class="nav-item">
                                     <a href="#" class="nav-link">
-                                        <i class="far fa-trash-alt nav-icon"></i>
-                                        <p>Tong Sampah Surat</p>
+                                        <i class="nav-icon fas fa-luggage-cart"></i>
+                                        <p>
+                                            Layanan
+                                        </p>
                                     </a>
                                 </li>
-                            </ul>
-                        </li>
-                        <!-- END LINK Surat Menyurat -->
+                                <!-- END LINK Layanan -->
 
-                        <!-- LINK Layanan -->
-                        <li class="nav-item">
-                            <a href="#" class="nav-link">
-                                <i class="nav-icon fas fa-luggage-cart"></i>
-                                <p>
-                                    Layanan
-                                </p>
-                            </a>
-                        </li>
-                        <!-- END LINK Layanan -->
+                                <li class="nav-item">
+                                    <a href="#" class="nav-link">
+                                        <i class="nav-icon fas fa-edit"></i>
+                                        <p>
+                                            Tulis Surat
+                                        </p>
+                                    </a>
+                                </li>
 
-                        <li class="nav-header">LAPORAN</li>
-                        <li class="nav-item">
-                            <a href="#" class="nav-link">
-                                <i class="nav-icon fas fa-copy"></i>
-                                <p>Laporan</p>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="./table-tamu.php" class="nav-link active">
-                                <i class="nav-icon fas fa-user-circle"></i>
-                                <p>Daftar Tamu</p>
-                            </a>
-                        </li>
+                                <li class="nav-header">LAPORAN</li>
+                                <li class="nav-item">
+                                    <a href="./table-tamu.php" class="nav-link active">
+                                        <i class="nav-icon fas fa-user-circle"></i>
+                                        <p>Daftar Tamu</p>
+                                    </a>
+                                </li>
+
+                            <?php } elseif ($_SESSION['jabatan'] == 'Kepala Dinas' || $_SESSION['jabatan'] == 'Sekretaris' || $_SESSION['jabatan'] == 'Kepala Bidang') { ?>
+
+                                <!-- LINK Surat Menyurat -->
+                                <li class="nav-item">
+                                    <a href="#" class="nav-link">
+                                        <i class="nav-icon fas fa-envelope"></i>
+                                        <p>
+                                            Surat Menyurat
+                                            <i class="fas fa-angle-left right"></i>
+                                        </p>
+                                    </a>
+
+                                    <ul class="nav nav-treeview">
+                                        <li class="nav-item">
+                                            <a href="#" class="nav-link">
+                                                <i class="far fa-circle nav-icon"></i>
+                                                <p>Surat Masuk</p>
+                                            </a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a href="#" class="nav-link">
+                                                <i class="far fa-trash-alt nav-icon"></i>
+                                                <p>Tong Sampah Surat</p>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </li>
+                                <!-- END LINK Surat Menyurat -->
+
+                                <li class="nav-header">LAPORAN</li>
+                                <li class="nav-item">
+                                    <a href="#" class="nav-link">
+                                        <i class="nav-icon fas fa-copy"></i>
+                                        <p>Laporan</p>
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="./table-tamu.php" class="nav-link active">
+                                        <i class="nav-icon fas fa-user-circle"></i>
+                                        <p>Daftar Tamu</p>
+                                    </a>
+                                </li>
+
+                            <?php } else { ?>
+                                <!-- LINK Surat Menyurat -->
+                                <li class="nav-item">
+                                    <a href="#" class="nav-link">
+                                        <i class="nav-icon fas fa-envelope"></i>
+                                        <p>
+                                            Surat Menyurat
+                                            <i class="fas fa-angle-left right"></i>
+                                        </p>
+                                    </a>
+
+                                    <ul class="nav nav-treeview">
+                                        <li class="nav-item">
+                                            <a href="#" class="nav-link">
+                                                <i class="far fa-circle nav-icon"></i>
+                                                <p>Surat Masuk</p>
+                                            </a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a href="#" class="nav-link">
+                                                <i class="far fa-trash-alt nav-icon"></i>
+                                                <p>Tong Sampah Surat</p>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </li>
+                                <!-- END LINK Surat Menyurat -->
+
+                                <li class="nav-header">LAPORAN</li>
+                                <li class="nav-item">
+                                    <a href="#" class="nav-link">
+                                        <i class="nav-icon fas fa-copy"></i>
+                                        <p>Laporan</p>
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="./table-tamu.php" class="nav-link active">
+                                        <i class="nav-icon fas fa-user-circle"></i>
+                                        <p>Daftar Tamu</p>
+                                    </a>
+                                </li>
+                        <?php }
+                        } ?>
                     </ul>
                 </nav>
                 <!-- /.sidebar-menu -->
@@ -323,7 +411,6 @@ if (!$result) {
             <!-- /.sidebar -->
         </aside>
 
-        <!-- main content -->
         <div class="content-wrapper">
             <div class="content-header">
                 <div class="container-fluid">
@@ -347,55 +434,100 @@ if (!$result) {
                         <div class="col-12">
                             <div class="card">
                                 <div class="card-header">
-                                    <h3 class="card-title">DataTable with default features</h3>
+                                    <h3 class="card-title">Data Tamu</h3>
                                 </div>
                                 <div class="card-body">
-                                    <div class="row">
-                                        <div class="col-2 mb-2">
-                                            <a href="#" class="btn bg-navy color-palette"><i class="fas fa-print"> Cetak</i></a>
+                                    <!-- Form Filter -->
+                                    <form method="GET" action="table-tamu.php">
+                                        <div class="row mb-3">
+                                            <div class="col-md-3">
+                                                <label for="periode">Periode:</label>
+                                                <select name="periode" id="periode" class="form-control">
+                                                    <option value="all" <?php echo ($periode == 'all') ? 'selected' : ''; ?>>Semua</option>
+                                                    <option value="harian" <?php echo ($periode == 'harian') ? 'selected' : ''; ?>>Harian</option>
+                                                    <option value="mingguan" <?php echo ($periode == 'mingguan') ? 'selected' : ''; ?>>Mingguan</option>
+                                                    <option value="bulanan" <?php echo ($periode == 'bulanan') ? 'selected' : ''; ?>>Bulanan</option>
+                                                    <option value="tahunan" <?php echo ($periode == 'tahunan') ? 'selected' : ''; ?>>Tahunan</option>
+                                                </select>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <label for="bulan">Bulan:</label>
+                                                <select name="bulan" id="bulan" class="form-control">
+                                                    <option value="all" <?php echo ($bulan == 'all') ? 'selected' : ''; ?>>Semua</option>
+                                                    <?php for ($i = 1; $i <= 12; $i++): ?>
+                                                        <option value="<?php echo $i; ?>" <?php echo ($bulan == $i) ? 'selected' : ''; ?>>
+                                                            <?php echo date("F", mktime(0, 0, 0, $i, 1)); ?>
+                                                        </option>
+                                                    <?php endfor; ?>
+                                                </select>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <label for="tahun">Tahun:</label>
+                                                <select name="tahun" id="tahun" class="form-control">
+                                                    <option value="all" <?php echo ($tahun == 'all') ? 'selected' : ''; ?>>Semua</option>
+                                                    <?php for ($y = date('Y'); $y >= 2000; $y--): ?>
+                                                        <option value="<?php echo $y; ?>" <?php echo ($tahun == $y) ? 'selected' : ''; ?>>
+                                                            <?php echo $y; ?>
+                                                        </option>
+                                                    <?php endfor; ?>
+                                                </select>
+                                            </div>
+                                            <div class="col-md-3 d-flex align-items-end">
+                                                <button type="submit" class="btn btn-primary">Filter</button>
+                                            </div>
                                         </div>
-                                        <div class="col-2 mb-2">
-                                            <a href="#" class="btn bg-green color-palette"><i class="fas fa-print"> Export Excel</i></a>
+                                    </form>
+
+                                    <!-- Tombol Print dan Export -->
+                                    <div class="row mb-3">
+                                        <div class="col-1.5">
+                                            <a href="print_pdf.php?periode=<?php echo $periode; ?>&bulan=<?php echo $bulan; ?>&tahun=<?php echo $tahun; ?>" class="btn bg-navy color-palette">
+                                                <i class="fas fa-file-pdf"></i> Print ke PDF
+                                            </a>
                                         </div>
-                                        <div class="col-2 mb-2">
-                                            <a href="#" class="btn bg-blue color-palette"><i class="fas fa-print"> Export Word</i></a>
+                                        <div class="col-2">
+                                            <a href="export_excel.php?periode=<?php echo $periode; ?>&bulan=<?php echo $bulan; ?>&tahun=<?php echo $tahun; ?>" class="btn bg-success color-palette">
+                                                <i class="fas fa-file-excel"></i> Export ke Excel
+                                            </a>
                                         </div>
                                     </div>
+
+                                    <!-- Tabel Data Tamu -->
                                     <table id="example1" class="table table-bordered table-striped">
                                         <thead>
                                             <tr>
-                                                <th style="width: 10px">No</th>
+                                                <th>No</th>
+                                                <th>NIK</th>
                                                 <th>Nama Tamu</th>
+                                                <th>Nomor HP</th>
                                                 <th>Instansi</th>
                                                 <th>Keperluan</th>
-                                                <th>Tanggal</th>
+                                                <th>Tanggal & Jam</th>
                                                 <th>Aksi</th>
                                             </tr>
                                         </thead>
                                         <tbody>
                                             <?php
+                                            // Ambil data dari database
                                             $no = 1;
-
-                                            while ($row = $result->fetch_assoc()) : ?>
-                                                <tr>
-                                                    <td><?= $no++; ?></td>
-                                                    <td><?= htmlspecialchars($row['nama_tamu']); ?></td>
-                                                    <td><?= htmlspecialchars($row['instansi']); ?></td>
-                                                    <td><?= htmlspecialchars($row['keperluan']); ?></td>
-                                                    <td><?= htmlspecialchars($row['tanggal_kunjungan']); ?></td>
-                                                    <td>
-                                                        <a href="lihat-data.php?id=<?= $row['id_tamu']; ?>" class="btn btn-info mb-1">
-                                                            <i class="fas fa-eye"></i> Lihat Data
-                                                        </a>
-                                                        <a href="print-data.php?id=<?= $row['id_tamu']; ?>" target="_blank" class="btn btn-warning mb-1">
-                                                            <i class="fas fa-print"></i> Print
-                                                        </a>
-                                                        <a href="edit-data.php?id=<?= $row['id_tamu']; ?>" class="btn btn-success mb-1">
-                                                            <i class="fas fa-edit"></i> Edit Data User
-                                                        </a>
-                                                    </td>
-                                                </tr>
-                                            <?php endwhile; ?>
+                                            while ($row = $result->fetch_assoc()) {
+                                                $idTamu = $row['id_tamu']; // Ambil id_tamu untuk setiap baris data
+                                                echo "<tr>";
+                                                echo "<td>" . $no++ . "</td>";
+                                                echo "<td>" . htmlspecialchars($row['nik']) . "</td>";
+                                                echo "<td>" . htmlspecialchars($row['nama_tamu']) . "</td>";
+                                                echo "<td>" . htmlspecialchars($row['no_hp']) . "</td>";
+                                                echo "<td>" . htmlspecialchars($row['instansi']) . "</td>";
+                                                echo "<td>" . htmlspecialchars($row['keperluan']) . "</td>";
+                                                echo "<td>" . htmlspecialchars($row['tanggal_kunjungan']) . "</td>";
+                                                echo "<td>
+        <a href='lihat-data.php?id_tamu=$idTamu' class='btn btn-info btn-sm'><i class='fas fa-eye'></i> Detail</a>
+        <a href='edit-data.php?id_tamu=$idTamu' class='btn btn-warning btn-sm'><i class='fas fa-edit'></i> Edit</a>
+        <a href='print-data.php?id_tamu=$idTamu' class='btn bg-navy btn-sm'><i class='fas fa-print'></i> Print</a>
+    </td>";
+                                                echo "</tr>";
+                                            }
+                                            ?>
                                         </tbody>
                                     </table>
                                 </div>
@@ -405,103 +537,11 @@ if (!$result) {
                 </div>
             </div>
         </div>
-        <!-- main content -->
-
-        <!-- footer -->
-        <footer class="main-footer">
-            <div class="float-right d-none d-sm-inline">
-                Anything you want
-            </div>
-            <strong>Copyright &copy; <span id="tahun"></span> <a href="https://adminlte.io">AdminLTE.io</a>.</strong> All rights reserved.
-        </footer>
-        <!-- end footer -->
     </div>
 
-    <!-- custom js -->
-    <script>
-        const currentDate = new Date();
-        const year = currentDate.getFullYear();
-        document.getElementById("tahun").innerHTML = year;
-    </script>
-
-    <script>
-        document.querySelector('.nav-item.dropdown').addEventListener('click', function() {
-            fetch('mark_notifications_read.php', {
-                    method: 'POST'
-                })
-                .then(response => response.text())
-                .then(data => console.log(data));
-        });
-    </script>
-
-
-    <!-- jQuery -->
     <script src="./assets/vendor/admin-lte/plugins/jquery/jquery.min.js"></script>
-    <!-- jQuery UI 1.11.4 -->
-    <script src="./assets/vendor/admin-lte/plugins/jquery-ui/jquery-ui.min.js"></script>
-    <!-- Resolve conflict in jQuery UI tooltip with Bootstrap tooltip -->
-    <script>
-        $.widget.bridge('uibutton', $.ui.button)
-    </script>
-    <!-- Bootstrap 4 -->
     <script src="./assets/vendor/admin-lte/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
-    <!-- ChartJS -->
-    <script src="./assets/vendor/admin-lte/plugins/chart.js/Chart.min.js"></script>
-    <!-- Sparkline -->
-    <script src="./assets/vendor/admin-lte/plugins/sparklines/sparkline.js"></script>
-    <!-- JQVMap -->
-    <script src="./assets/vendor/admin-lte/plugins/jqvmap/jquery.vmap.min.js"></script>
-    <script src="./assets/vendor/admin-lte/plugins/jqvmap/maps/jquery.vmap.usa.js"></script>
-    <!-- jQuery Knob Chart -->
-    <script src="./assets/vendor/admin-lte/plugins/jquery-knob/jquery.knob.min.js"></script>
-    <!-- daterangepicker -->
-    <script src="./assets/vendor/admin-lte/plugins/moment/moment.min.js"></script>
-    <script src="./assets/vendor/admin-lte/plugins/daterangepicker/daterangepicker.js"></script>
-    <!-- Tempusdominus Bootstrap 4 -->
-    <script src="./assets/vendor/admin-lte/plugins/tempusdominus-bootstrap-4/js/tempusdominus-bootstrap-4.min.js"></script>
-    <!-- Summernote -->
-    <script src="./assets/vendor/admin-lte/plugins/summernote/summernote-bs4.min.js"></script>
-    <!-- overlayScrollbars -->
-    <script src="./assets/vendor/admin-lte/plugins/overlayScrollbars/js/jquery.overlayScrollbars.min.js"></script>
-    <!-- AdminLTE App -->
     <script src="./assets/vendor/admin-lte/dist/js/adminlte.js"></script>
-    <!-- AdminLTE for demo purposes -->
-    <!-- <script src="./assets/vendor/admin-lte/dist/js/demo.js"></script> -->
-    <!-- AdminLTE dashboard demo (This is only for demo purposes) -->
-    <script src="./assets/vendor/admin-lte/dist/js/pages/dashboard.js"></script>
-
-    <script>
-        //-------------
-        //- DONUT CHART -
-        //-------------
-        // Get context with jQuery - using jQuery's .get() method.
-        var donutChartCanvas = $('#donutChart').get(0).getContext('2d')
-        var donutData = {
-            labels: [
-                'Chrome',
-                'IE',
-                'FireFox',
-                'Safari',
-                'Opera',
-                'Navigator',
-            ],
-            datasets: [{
-                data: [700, 500, 400, 600, 300, 100],
-                backgroundColor: ['#f56954', '#00a65a', '#f39c12', '#00c0ef', '#3c8dbc', '#d2d6de'],
-            }]
-        }
-        var donutOptions = {
-            maintainAspectRatio: false,
-            responsive: true,
-        }
-        //Create pie or douhnut chart
-        // You can switch between pie and douhnut using the method below.
-        new Chart(donutChartCanvas, {
-            type: 'doughnut',
-            data: donutData,
-            options: donutOptions
-        })
-    </script>
 </body>
 
 </html>

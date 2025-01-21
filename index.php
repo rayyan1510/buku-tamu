@@ -32,10 +32,10 @@
         <p>Ini adalah buku tamu pada DPMPTSP SUMUT</p>
 
         <form action="proses_simpan.php" method="POST">
-            <!-- nik -->
+            <!-- Identitas -->
             <div class="mb-3">
-                <label for="nik" class="form-label">Nik</label>
-                <input type="text" class="form-control" id="nik" name="nik_tamu" placeholder="Masukkan nik anda"
+                <label for="nik" class="form-label">No Identitas Diri</label>
+                <input type="text" class="form-control" id="nik" name="nik_tamu" placeholder="Masukkan ktp/sim/paspor anda"
                     aria-labelledby="Masukkan nik Anda" maxlength="16" required>
             </div>
 
@@ -56,12 +56,25 @@
                 <label for="pekerjaan" class="form-label">Pekerjaan Anda</label>
                 <select class="form-select" id="pekerjaan" name="pekerjaan" required>
                     <option selected disabled>--- Pilih Pekerjaan Anda ---</option>
-                    <option value="PNS">PNS</option>
-                    <option value="Swasta">Non PNS</option>
-                    <option value="Mahasiswa">Mahasiswa</option>
+                    <option value="ASN">ASN</option>
+                    <option value="Swasta">Non ASN</option>
+                    <option value="Pelaku Usaha">Pelaku Usaha</option>
                     <option value="Lainnya">Lainnya</option>
                 </select>
             </div>
+
+            <!-- Pekerjaan Untuk Pelaku Usaha -->
+            <div class="mb-3">
+                <label for="pelaku_usaha_input" class="form-label">Nama Usaha Anda</label>
+                <input type="tel" class="form-control" id="pelaku_usaha_input" name="pelaku_usaha" placeholder="Masukkan Nama Usaha Anda" required>
+            </div>
+
+            <!-- Jabatan Untuk Pelaku Usaha -->
+            <div class="mb-3">
+                <label for="jabatan_pelaku_usaha" class="form-label">Jabatan Anda</label>
+                <input type="tel" class="form-control" id="jabatan_pelaku_usaha" name="pelaku_usaha" placeholder="Masukkan Jabatan Anda" required>
+            </div>
+
 
             <!-- Detail Pekerjaan (Select) -->
             <div class="mb-3" id="detailPekerjaan" style="display: none;">

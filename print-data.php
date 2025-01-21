@@ -3,7 +3,7 @@ require_once('./assets/TCPDF/tcpdf.php');
 include 'connection.php';
 
 // Ambil ID tamu dari parameter URL
-$id_tamu = $_GET['id'] ?? null;
+$id_tamu = $_GET['id_tamu'] ?? null;
 
 if (!$id_tamu) {
   echo "<script>
@@ -14,7 +14,7 @@ if (!$id_tamu) {
 }
 
 // Query untuk mengambil data tamu berdasarkan ID
-$query = "SELECT tamu.nama_tamu, tamu.no_hp, tamu.keperluan, tamu.jenis_tamu, kunjungan.tanggal_kunjungan 
+$query = "SELECT tamu.nik, tamu.nama_tamu, tamu.no_hp, tamu.keperluan, tamu.jenis_tamu, kunjungan.tanggal_kunjungan 
           FROM tamu
           JOIN kunjungan ON tamu.id_tamu = kunjungan.id_tamu
           WHERE tamu.id_tamu = ?";
@@ -36,14 +36,14 @@ if (!$data) {
 $pdf = new TCPDF('P', 'mm', 'A4', true, 'UTF-8', false);
 
 // Nonaktifkan header dan footer bawaan TCPDF
-$pdf->setPrintHeader(false); // Ini untuk menghilangkan garis paling atas
+$pdf->setPrintHeader(false);
 $pdf->setPrintFooter(false);
 
 // Set informasi dokumen
 $pdf->SetCreator(PDF_CREATOR);
 $pdf->SetAuthor('DPMPTSP SUMUT');
-$pdf->SetTitle('Surat Tamu');
-$pdf->SetSubject('Surat Tamu');
+$pdf->SetTitle('Surat Kunjungan Tamu');
+$pdf->SetSubject('Surat Kunjungan Tamu');
 
 // Set margin dan auto page break
 $pdf->SetMargins(20, 30, 20);
@@ -103,6 +103,7 @@ EOD;
 $pdf->writeHTML($nomorSurat, true, false, false, false, 'L');
 
 // Tambahkan isi surat
+$nik = htmlspecialchars($data['nik']);
 $namaTamu = htmlspecialchars($data['nama_tamu']);
 $noHp = htmlspecialchars($data['no_hp']);
 $keperluan = htmlspecialchars($data['keperluan']);
@@ -118,7 +119,11 @@ Dengan ini disampaikan bahwa pada tanggal <b>$tanggal</b>, telah menerima kunjun
 
 <table border="1" cellpadding="5">
 <tr>
-<td width="30%"><b>Nama</b></td>
+<td width="30%"><b>NIK</b></td>
+<td>$nik</td>
+</tr>
+<tr>
+<td><b>Nama</b></td>
 <td>$namaTamu</td>
 </tr>
 <tr>
@@ -134,8 +139,8 @@ Dengan ini disampaikan bahwa pada tanggal <b>$tanggal</b>, telah menerima kunjun
 <td>{$data['jenis_tamu']}</td>
 </tr>
 </table>
-<br><br>
-
+<br>
+<br>
 Demikian surat ini dibuat sebagai tanda bukti kunjungan.<br><br>
 EOD;
 $pdf->SetXY(20, 90);
@@ -153,7 +158,6 @@ EOD;
 // Atur posisi semua elemen tanda tangan ke kanan
 $pdf->SetFont('times', '', 12); // Pastikan font sesuai
 $pdf->writeHTMLCell(0, 0, 99, 175, $ttd, 0, 1, 0, true, 'L', true); // Gunakan writeHTMLCell untuk kontrol penuh
-
 
 // Output PDF
 $pdf->Output("Surat_Kunjungan_$namaTamu.pdf", 'I');

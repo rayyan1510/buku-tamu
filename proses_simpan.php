@@ -44,7 +44,7 @@ if (isset($_POST) == true) {
     // cek jika pekerjaan 'Lainnya'
     if ($jenis_tamu === 'Lainnya' or $jenis_tamu === 'lainnya') {
         // masukkan pekerjaan 'Lainnya' dan tambahkan detail pekerjaan spesifik yang diinputkan oleh user
-        $pekerjaan = $jenis_tamu . ' ' . $detailPekerjaanSpesifik;
+        $pekerjaan = $jenis_tamu . ' (' . $detailPekerjaanSpesifik . ')';
     }
 
 
@@ -57,7 +57,7 @@ if (isset($_POST) == true) {
     // jika keperluan lainnya + $keperluanInput
     if ($keperluan === 'Lainnya') {
         # code...
-        $tujuan = $keperluan . ' ' . $keperluanInput;
+        $tujuan = $keperluan . ' (' . $keperluanInput . ')';
     } else {
         # code...
         $tujuan = $keperluan;
@@ -86,7 +86,7 @@ if (isset($_POST) == true) {
 
         // 2. Insert ke tabel `kunjungan` menggunakan prepared statement
         $queryInsertKunjungan = "INSERT INTO kunjungan (tanggal_kunjungan, id_tamu) 
-                             VALUES (CURDATE(), ?)";
+                             VALUES (NOW(), ?)";
         $stmtKunjungan = mysqli_prepare($koneksi, $queryInsertKunjungan);
         mysqli_stmt_bind_param($stmtKunjungan, "i", $id_tamu);
         mysqli_stmt_execute($stmtKunjungan);
@@ -97,42 +97,12 @@ if (isset($_POST) == true) {
 
         // buat session untuk menampilkan pesan sukses
         $_SESSION['success_message'] = "Data tamu berhasil ditambahkan!";
-
-        // echo "<script>
-        //         Swal.fire({
-        //             title: 'Berhasil!',
-        //             text: 'Data tamu berhasil ditambahkan.',
-        //             icon: 'success',
-        //             confirmButtonText: 'OK'
-        //         }).then((result) => {
-        //             if (result.isConfirmed) {
-        //                 window.location.href = 'index.php';
-        //             }
-        //         });
-        //       </script>";
     } catch (Exception $e) {
         // Rollback jika terjadi error
         mysqli_rollback($koneksi);
 
         // buat session untuk menampilkan pesan yang gagal
         $_SESSION['error_message'] = "Gagal menyimpan data tamu. Silakan coba lagi.";
-
-
-
-        // echo "Gagal menyimpan data: " . $e->getMessage();
-
-        // echo "<script>
-        //         Swal.fire({
-        //             title: 'Gagal!',
-        //             text: 'Gagal menyimpan data tamu. Silakan coba lagi.',
-        //             icon: 'error',
-        //             confirmButtonText: 'OK'
-        //         }).then((result) => {
-        //             if (result.isConfirmed) {
-        //                 window.location.href = 'index.php';
-        //             }
-        //         });
-        //       </script>";
     }
 
     // Tutup statement dan koneksi

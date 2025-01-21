@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Waktu pembuatan: 20 Jan 2025 pada 09.16
+-- Waktu pembuatan: 21 Jan 2025 pada 04.03
 -- Versi server: 10.4.32-MariaDB
 -- Versi PHP: 8.2.12
 
@@ -29,19 +29,9 @@ SET time_zone = "+00:00";
 
 CREATE TABLE `kunjungan` (
   `id_kunjungan` int(11) NOT NULL,
-  `tanggal_kunjungan` date NOT NULL,
+  `tanggal_kunjungan` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
   `id_tamu` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Dumping data untuk tabel `kunjungan`
---
-
-INSERT INTO `kunjungan` (`id_kunjungan`, `tanggal_kunjungan`, `id_tamu`) VALUES
-(18, '2025-01-20', 18),
-(19, '2025-01-20', 19),
-(20, '2025-01-20', 20),
-(21, '2025-01-20', 21);
 
 -- --------------------------------------------------------
 
@@ -55,18 +45,9 @@ CREATE TABLE `tamu` (
   `nama_tamu` varchar(100) DEFAULT NULL,
   `no_hp` varchar(20) DEFAULT NULL,
   `keperluan` text DEFAULT NULL,
-  `jenis_tamu` varchar(255) DEFAULT NULL
+  `jenis_tamu` varchar(255) DEFAULT NULL,
+  `status_notifikasi` tinyint(1) DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Dumping data untuk tabel `tamu`
---
-
-INSERT INTO `tamu` (`id_tamu`, `nik`, `nama_tamu`, `no_hp`, `keperluan`, `jenis_tamu`) VALUES
-(18, 15786216, 'rayyan', '085360974655', 'Konsultasi', 'PNS OPD Prov Sumut'),
-(19, 15786216, 'rayyan', '085360974655', 'Permohonan informasi PB', 'Swasta'),
-(20, 15786216, 'rayyan', '085360974655', 'Pengurusan PB UMKU', 'Mahasiswa'),
-(21, 15786216, 'rayyan', '085360974655', 'Permohonan informasi PPID', 'PNS Kementerian');
 
 -- --------------------------------------------------------
 
@@ -123,13 +104,13 @@ ALTER TABLE `user`
 -- AUTO_INCREMENT untuk tabel `kunjungan`
 --
 ALTER TABLE `kunjungan`
-  MODIFY `id_kunjungan` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=22;
+  MODIFY `id_kunjungan` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=24;
 
 --
 -- AUTO_INCREMENT untuk tabel `tamu`
 --
 ALTER TABLE `tamu`
-  MODIFY `id_tamu` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=22;
+  MODIFY `id_tamu` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=24;
 
 --
 -- AUTO_INCREMENT untuk tabel `user`
