@@ -139,3 +139,19 @@ body {
     text-align: center;
     color: #994d4d; /* Merah pastel gelap */
 }
+
+/* CSS untuk pesan error */
+.error-message {
+    color: red;
+    background-color: #f8d7da;
+    border: 1px solid #f5c6cb;
+    padding: 10px;
+    text-align: center;
+    margin-top: 15px;
+    border-radius: 5px;
+    width: 100%;
+    max-width: 400px;
+    margin-left: auto;
+    margin-right: auto;
+    font-weight: bold;
+}

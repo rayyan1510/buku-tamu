@@ -1,3 +1,27 @@
+<?php
+session_start();  // pastikan session dimulai untuk mendapatkan user login
+include 'connection.php'; // pastikan koneksi ke database berhasil
+
+// cek apakah user sudah login
+if (!isset($_SESSION['username'])) {
+    header('Location: login_admin.php');  // jika belum login, alihkan ke login
+    exit;
+}
+
+// Query untuk menampilkan data user yang login
+$username = $_SESSION['username'];
+$query = "SELECT * FROM user WHERE username = '$username'";
+$result = mysqli_query($koneksi, $query);
+
+if (mysqli_num_rows($result) > 0) {
+    $user = mysqli_fetch_assoc($result);
+    echo "Selamat datang, " . $user['nama']; // menampilkan nama user
+} else {
+    echo "User tidak ditemukan";
+}
+?>
+
+
 <!DOCTYPE html>
 <!--
 This is a starter template page. Use this page to start your new project from
@@ -69,6 +93,12 @@ scratch. This page gets rid of all links and provides the needed markup only.
                         </form>
                     </div>
                 </li>
+                <!-- Logout Button -->
+                    <li class="nav-item">
+                        <a class="nav-link" href="logout.php">
+                            <i class="fas fa-sign-out-alt"></i> Logout
+                        </a>
+                    </li>
 
                 <!-- Messages Dropdown Menu -->
                 <li class="nav-item dropdown">
