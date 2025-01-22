@@ -1,5 +1,6 @@
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 <?php 
 session_start();
 
@@ -16,6 +17,8 @@ $time = time() - 3600;  // Menetapkan waktu kadaluarsa cookie satu jam yang lalu
 =======
 =======
 >>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
 <?php
 // Mulai sesi
 session_start();
@@ -30,6 +33,9 @@ $cookie_name = "cookie_username";
 $cookie_value = "";
 $time = time() - (60 * 60); // Set waktu expired cookie
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
@@ -42,7 +48,11 @@ setcookie($cookie_name, $cookie_value, $time, "/");
 header("Location: login_admin.php");
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 exit;
+=======
+exit();
+>>>>>>> Stashed changes
 =======
 exit();
 >>>>>>> Stashed changes
