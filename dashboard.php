@@ -1,4 +1,5 @@
 <?php
+<<<<<<< Updated upstream
 session_start();  // pastikan session dimulai untuk mendapatkan user login
 include 'connection.php'; // pastikan koneksi ke database berhasil
 
@@ -22,6 +23,17 @@ if (mysqli_num_rows($result) > 0) {
 ?>
 
 
+=======
+// Mulai sesi
+session_start();
+
+// Cek apakah session sudah ada, jika tidak redirect ke login
+if (!isset($_SESSION['session_username'])) {
+    header("Location: login_admin.php");
+    exit();
+}
+?>
+>>>>>>> Stashed changes
 <!DOCTYPE html>
 <!--
 This is a starter template page. Use this page to start your new project from
