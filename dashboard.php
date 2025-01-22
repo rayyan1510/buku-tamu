@@ -1,5 +1,6 @@
 <?php
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 session_start();  // pastikan session dimulai untuk mendapatkan user login
 include 'connection.php'; // pastikan koneksi ke database berhasil
 
@@ -24,6 +25,8 @@ if (mysqli_num_rows($result) > 0) {
 
 
 =======
+=======
+>>>>>>> Stashed changes
 // Mulai sesi
 session_start();
 
@@ -33,6 +36,9 @@ if (!isset($_SESSION['session_username'])) {
     exit();
 }
 ?>
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 <!DOCTYPE html>
 <!--

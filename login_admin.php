@@ -1,5 +1,6 @@
 <?php 
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 session_start();
 
 // If the user is already logged in, redirect to dashboard
@@ -10,6 +11,8 @@ if (isset($_SESSION['session_username']) && $_SESSION['session_username'] != '')
 ?>
 
 =======
+=======
+>>>>>>> Stashed changes
 include('connection.php');
 session_start();
 
@@ -81,6 +84,9 @@ if(isset($_POST['login'])){
 }
 
 ?>
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 <!DOCTYPE html>
 <html lang="en">
@@ -104,6 +110,7 @@ if(isset($_POST['login'])){
         <div class="right-section">
             <h3>Silakan Login Disini!</h3>
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
             <form method="POST" action="login_admin.php">
                 <div class="form-group">
                     <input type="text" name="username" placeholder="Enter Username..." required>
@@ -118,6 +125,8 @@ if(isset($_POST['login'])){
                 <button type="submit" class="btn-login">Login</button>
             </form>
 =======
+=======
+>>>>>>> Stashed changes
  <form action="dashboard.php" method="POST">
     <div class="form-group">
         <input id="login-username" type="text" class="form-control" name="username" value="<?php echo $username ?>" placeholder="username">                                         
@@ -131,6 +140,9 @@ if(isset($_POST['login'])){
     </div>
     <button type="submit" name="login" class="btn btn-success btn-login">Login</button>
 </form>
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
         </div>
     </div>
@@ -183,4 +195,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
 
 
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
