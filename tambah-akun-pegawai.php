@@ -4,7 +4,6 @@ session_start();
 // Hubungkan ke database
 include './connection.php';
 
-
 // if (!isset($_SESSION['jabatan'])) {
 //     header('Location: login_admin.php');
 //     exit;
@@ -12,10 +11,58 @@ include './connection.php';
 //     // header('Location: table-tamu.php');
 // }
 
-// menampilkan data akun pengguna
-$query = "SELECT * FROM view_akun_pengguna";
+// menampilkan data pegawai
+$query = "SELECT * FROM view_pegawai";
 $result = mysqli_query($koneksi, $query);
 
+if (isset($_POST['submit'])) {
+    # jalankan proses insert
+
+    // Ambil data dari form
+    $username = trim($_POST['Username']);
+    $password = password_hash(trim($_POST['password']), PASSWORD_DEFAULT); // Hash password
+    $id_pegawai = $_POST['id_pegawai'];
+
+    // Cek apakah username atau id_pegawai sudah ada
+    $checkQuery = "SELECT * FROM tbl_login WHERE username = ? OR id_pegawai = ?";
+    $stmt = $koneksi->prepare($checkQuery);
+    $stmt->bind_param("si", $username, $id_pegawai);
+    $stmt->execute();
+    $result = $stmt->get_result();
+
+    if ($result->num_rows > 0) {
+        // Jika data sudah ada
+        $_SESSION['alert'] = [
+            'type' => 'error',
+            'title' => 'Gagal!',
+            'message' => 'Akun sudah terdaftar.'
+        ];
+        header("Location: table-login.php"); // Redirect setelah simpan
+        exit();
+    } else {
+        // Jika data belum ada, lakukan insert
+        $insertQuery = "INSERT INTO tbl_login (username, password, id_pegawai) VALUES (?, ?, ?)";
+        $stmt = $koneksi->prepare($insertQuery);
+        $stmt->bind_param("ssi", $username, $password, $id_pegawai);
+
+        if ($stmt->execute()) {
+            $_SESSION['alert'] = [
+                'type' => 'success',
+                'title' => 'Berhasil!',
+                'message' => 'Data berhasil disimpan!'
+            ];
+            header("Location: table-login.php"); // Redirect setelah simpan
+            exit();
+        } else {
+            $_SESSION['alert'] = [
+                'type' => 'error',
+                'title' => 'Gagal!',
+                'message' => 'Terjadi kesalahan saat menyimpan data.'
+            ];
+        }
+    }
+    $stmt->close();
+}
 
 ?>
 
@@ -36,6 +83,9 @@ $result = mysqli_query($koneksi, $query);
     <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
     <!-- Tempusdominus Bootstrap 4 -->
     <link rel="stylesheet" href="./assets/vendor/admin-lte/plugins/tempusdominus-bootstrap-4/css/tempusdominus-bootstrap-4.min.css">
+    <!-- Select2 -->
+    <link rel="stylesheet" href="./assets/vendor/admin-lte/plugins/select2/css/select2.min.css">
+    <link rel="stylesheet" href="./assets/vendor/admin-lte/plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css">
     <!-- iCheck -->
     <link rel="stylesheet" href="./assets/vendor/admin-lte/plugins/icheck-bootstrap/icheck-bootstrap.min.css">
     <!-- JQVMap -->
@@ -48,11 +98,9 @@ $result = mysqli_query($koneksi, $query);
     <link rel="stylesheet" href="./assets/vendor/admin-lte/plugins/daterangepicker/daterangepicker.css">
     <!-- summernote -->
     <link rel="stylesheet" href="./assets/vendor/admin-lte/plugins/summernote/summernote-bs4.min.css">
-
     <!-- link sweetalert -->
     <link rel="stylesheet" href="./assets/vendor/node_modules/sweetalert2/dist/sweetalert2.min.css">
     <script src="./assets/vendor/node_modules/sweetalert2/dist/sweetalert2.min.js"></script>
-
 
     <!-- JS chart -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -65,7 +113,9 @@ $result = mysqli_query($koneksi, $query);
         <!-- /.navbar -->
 
         <!-- Main Sidebar Container -->
-        <?php include_once './assets/komponen/sidebar.php'; ?>
+        <?php
+        include_once './assets/komponen/sidebar.php';
+        ?>
         <!-- Sidebar -->
 
 
@@ -93,86 +143,45 @@ $result = mysqli_query($koneksi, $query);
                         <div class="col-12">
                             <div class="card">
                                 <div class="card-header">
-                                    <h3 class="card-title">Data Akun Pengguna</h3>
+                                    <h3 class="card-title">Tambah Data Akun Pengguna</h3>
                                 </div>
-                                <div class="card-body">
 
-                                    <div class="row mb-3">
-                                        <div class="col-1.5">
-                                            <a href="./tambah-akun-pegawai.php" class="btn btn-success color-palette">
-                                                <i class="fas fa-plus-square"></i> Tambah Data
-                                            </a>
+                                <!-- form start -->
+                                <form method="post">
+                                    <div class="card-body">
+                                        <div class="form-group">
+                                            <label for="username">Username</label>
+                                            <input type="name" class="form-control" id="username" name="Username" placeholder="Masukkan Username" required>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="exampleInputPassword1">Password</label>
+                                            <input type="password" class="form-control" id="exampleInputPassword1" name="password" placeholder="Password" required>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="pegawai">Nama Pegawai</label>
+                                            <select class="form-control select2" name="id_pegawai" id="pegawai" data-placeholder="Pilih Nama Pegawai" required>
+                                                <?php
+                                                if ($result->num_rows > 0) {
+                                                    while ($row = $result->fetch_assoc()) {
+                                                ?>
+                                                        <option value="<?= $row['id_pegawai']; ?>"><?= $row['nama_pegawai']; ?></option>
+                                                    <?php }
+                                                } else { ?>
+                                                    <option value="" selected>Data Pegawai Belum Ada</option>
+                                                <?php } ?>
+                                            </select>
                                         </div>
                                     </div>
+                                    <!-- /.card-body -->
 
-                                    <script>
-                                        function confirmDelete() {
-                                            // Menggunakan confirm bawaan browser
-                                            return confirm('Apakah Anda yakin ingin menghapus data ini?');
+                                    <div class="card-footer">
+                                        <a href="./table-login.php" class="btn btn-secondary color-palette">
+                                            <i class="fas fa-arrow-left"></i> Kembali
+                                        </a>
+                                        <button type="submit" name="submit" class="btn btn-success"><i class="fas fa-save"></i> Submit</button>
+                                    </div>
+                                </form>
 
-                                            // Atau menggunakan SweetAlert (lebih recommended)
-                                            /*
-                                            event.preventDefault();
-                                            const url = event.currentTarget.href;
-                                            Swal.fire({
-                                                title: 'Hapus Data?',
-                                                text: "Data yang dihapus tidak bisa dikembalikan!",
-                                                icon: 'warning',
-                                                showCancelButton: true,
-                                                confirmButtonColor: '#d33',
-                                                cancelButtonColor: '#3085d6',
-                                                confirmButtonText: 'Ya, Hapus!'
-                                            }).then((result) => {
-                                                if (result.isConfirmed) {
-                                                    window.location.href = url;
-                                                }
-                                            })
-                                            */
-                                        }
-                                    </script>
-
-                                    <!-- Tabel Data Tamu -->
-                                    <table id="example1" class="table table-bordered table-striped">
-                                        <thead>
-                                            <tr>
-                                                <th>No</th>
-                                                <th>Username</th>
-                                                <th>Nama Pegawai</th>
-                                                <th>Status</th>
-                                                <th>Jabatan</th>
-                                                <th>Aksi</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <?php
-                                            $no = 1;
-                                            if ($result->num_rows > 0) {
-                                                while ($row = $result->fetch_assoc()) {
-                                            ?>
-                                                    <tr>
-                                                        <td><?= $no++; ?></td>
-                                                        <td><?= $row['username']; ?></td>
-                                                        <td><?= $row['nama_pegawai']; ?></td>
-                                                        <td><?= $row['status']; ?></td>
-                                                        <td><?= $row['nama_jabatan']; ?></td>
-                                                        <td>
-                                                            <a href="./edit-akun-pegawai.php?id=<?= $row['id_login']; ?>" class="btn btn-warning">
-                                                                <i class="fas fa-edit"></i> Edit Data
-                                                            </a>
-                                                            <a href="./hapus-akun-pegawai.php?id=<?= $row['id_login']; ?>" class="btn btn-danger" onclick='return confirmDelete()'><i class="fas fa-trash"></i> Hapus Data</a>
-                                                        </td>
-                                                    </tr>
-                                                <?php
-                                                }
-                                            } else { ?>
-                                                <tr>
-                                                    <td colspan='5' class='text-center'>Tidak ada data ditemukan</td>
-                                                </tr>
-                                            <?php } ?>
-
-                                        </tbody>
-                                    </table>
-                                </div>
                             </div>
                         </div>
                     </div>
@@ -182,6 +191,19 @@ $result = mysqli_query($koneksi, $query);
         <!-- Main Content -->
 
     </div>
+
+    <script>
+        // Fungsi untuk menangani notifikasi dari session
+        <?php if (isset($_SESSION['alert'])): ?>
+            Swal.fire({
+                icon: '<?= $_SESSION['alert']['type'] ?>',
+                title: '<?= $_SESSION['alert']['title'] ?>',
+                text: '<?= $_SESSION['alert']['message'] ?>',
+                confirmButtonColor: '#3085d6'
+            });
+            <?php unset($_SESSION['alert']); ?>
+        <?php endif; ?>
+    </script>
 
     <!-- jQuery -->
     <script src="./assets/vendor/admin-lte/plugins/jquery/jquery.min.js"></script>
@@ -193,6 +215,8 @@ $result = mysqli_query($koneksi, $query);
     </script>
     <!-- Bootstrap 4 -->
     <script src="./assets/vendor/admin-lte/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <!-- Select2 -->
+    <script src="./assets/vendor/admin-lte/plugins/select2/js/select2.full.min.js"></script>
     <!-- ChartJS -->
     <script src="./assets/vendor/admin-lte/plugins/chart.js/Chart.min.js"></script>
     <!-- Sparkline -->
@@ -218,22 +242,12 @@ $result = mysqli_query($koneksi, $query);
     <!-- AdminLTE dashboard demo (This is only for demo purposes) -->
     <script src="./assets/vendor/admin-lte/dist/js/pages/dashboard.js"></script>
 
-    <?php if (isset($_SESSION['alert'])): ?>
-        <script>
-            // Gunakan SweetAlert untuk tampilan lebih baik (opsional)
-            Swal.fire({
-                icon: '<?= $_SESSION['alert']['type'] ?>',
-                title: '<?= ucfirst($_SESSION['alert']['type']) ?>',
-                text: '<?= addslashes($_SESSION['alert']['message']) ?>'
-            });
-
-            // Jika hanya ingin menggunakan alert biasa:
-            // alert('<?= addslashes($_SESSION['alert']['message']) ?>');
-        </script>
-    <?php
-        unset($_SESSION['alert']); // Hapus session setelah ditampilkan
-    endif;
-    ?>
+    <script>
+        $(document).ready(function() {
+            //Initialize Select2 Elements
+            $('.select2').select2()
+        });
+    </script>
 </body>
 
 </html>
