@@ -1,9 +1,9 @@
         <aside class="main-sidebar sidebar-dark-primary">
             <!-- Brand Logo -->
-            <a href="index3.html" class="brand-link">
-                <img src="./assets/img/logo-sumut.png" alt="Logo" class="brand-image"
+            <a href="./dashboard.php" class="brand-link">
+                <img src="./assets/img/sibook.png" alt="Logo Sibook" class="brand-image"
                     style="">
-                <span class="brand-text font-weight-light">Siap Layani</span>
+                <span class="brand-text font-weight-light">Sibook</span>
             </a>
 
             <!-- Sidebar -->
@@ -15,10 +15,13 @@
                     </div>
                     <div class="info">
                         <p class="d-block text-white">Selamat Datang</p>
-                        <!-- <a href="#" class="d-block"><?= ucwords($_SESSION['nama']); ?></a> -->
+                        <a href="#" class="d-block"><?= ucwords($_SESSION['nama']); ?></a>
                     </div>
                 </div>
 
+                <?php
+                $jabatan = $_SESSION['nama_jabatan'] ?? ''; // Ambil jabatan dari session, default kosong jika belum login
+                ?>
 
                 <!-- Sidebar Menu -->
                 <nav class="mt-2">
@@ -36,194 +39,172 @@
 
                         <li class="nav-header">General</li>
 
-                        <?php
+                        <!-- Data Keperluan Tamu (Akses: 'Kepala Dinas Penanaman Modal dan PTSP', 'Sekretaris', 'Kepala Sub Bagian Umum dan Kepegawaian', 'Front Office', 'Front Office (OSS)', 'Satpam', 'Admin' ) -->
+                        <?php if (in_array($jabatan, ['Kepala Dinas Penanaman Modal dan PTSP', 'Sekretaris', 'Kepala Sub Bagian Umum dan Kepegawaian', 'Front Office', 'Front Office (OSS)', 'Satpam', 'Admin'])): ?>
+                            <!-- LINK TAMU -->
+                            <li class="nav-item">
+                                <a href="./table-tamu.php" class="nav-link">
+                                    <i class="nav-icon fas fa-user-circle"></i>
+                                    <p>Daftar Tamu</p>
+                                </a>
+                            </li>
+                            <!-- END LINK TAMU -->
 
-                        // if (isset($_SESSION['jabatan'])) {
-                        //     if ($_SESSION['jabatan'] == 'Fo' or $_SESSION['jabatan'] == 'FO') {
-                        ?>
+                            <!-- LINK Keperluan -->
+                            <li class="nav-item">
+                                <a href="#" class="nav-link">
+                                    <i class="nav-icon fas fa-luggage-cart"></i>
+                                    <p>
+                                        Data Keperluan Tamu
+                                        <i class="fas fa-angle-left right"></i>
+                                    </p>
+                                </a>
 
-                        <!-- LINK Layanan -->
-                        <li class="nav-item">
-                            <a href="#" class="nav-link">
-                                <i class="nav-icon fas fa-luggage-cart"></i>
-                                <p>
-                                    Layanan
-                                </p>
-                            </a>
-                        </li>
-                        <!-- END LINK Layanan -->
+                                <ul class="nav nav-treeview">
+                                    <li class="nav-item">
+                                        <a href="#" class="nav-link">
+                                            <i class="nav-icon fas fa-user-tie"></i>
+                                            <p>ASN</p>
+                                        </a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a href="#" class="nav-link">
+                                            <i class="nav-icon fas fa-store"></i>
+                                            <p>Pelaku Usaha</p>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </li>
+                            <!-- END LINK Keperluan -->
+                        <?php endif; ?>
 
-                        <li class="nav-item">
-                            <a href="#" class="nav-link">
-                                <i class="nav-icon fas fa-edit"></i>
-                                <p>
-                                    Tulis Surat
-                                </p>
-                            </a>
-                        </li>
+                        <?php if (in_array($jabatan, ['Kepala Dinas Penanaman Modal dan PTSP', 'Sekretaris', 'Kepala Sub Bagian Umum dan Kepegawaian', 'Front Office', 'Front Office (OSS)', 'Satpam', 'Admin'])): ?>
+                            <!-- LINK Pekerjaan -->
+                            <li class="nav-item">
+                                <a href="#" class="nav-link">
+                                    <i class="nav-icon fas fa-briefcase"></i>
+                                    <p>
+                                        Data Pekerjaan Tamu
+                                        <i class="fas fa-angle-left right"></i>
+                                    </p>
+                                </a>
 
-                        <li class="nav-header">LAPORAN</li>
-                        <li class="nav-item">
-                            <a href="./table-tamu.php" class="nav-link">
-                                <i class="nav-icon fas fa-user-circle"></i>
-                                <p>Daftar Tamu</p>
-                            </a>
-                        </li>
+                                <ul class="nav nav-treeview">
+                                    <li class="nav-item">
+                                        <a href="#" class="nav-link">
+                                            <i class="nav-icon fas fa-user-tie"></i>
+                                            <p>ASN</p>
+                                        </a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a href="#" class="nav-link">
+                                            <i class="nav-icon fas fa-store"></i>
+                                            <p>Pelaku Usaha</p>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </li>
+                            <!-- END LINK Pekerjaan -->
+                        <?php endif; ?>
 
-                        <?php
-                        // } elseif ($_SESSION['jabatan'] == 'Kepala Dinas' || $_SESSION['jabatan'] == 'Sekretaris' || $_SESSION['jabatan'] == 'Kepala Bidang') { 
+                        <?php if (in_array($jabatan, ['Admin'])): ?>
+                            <li class="nav-header">Pengaturan Form</li>
+                            <!-- Setting Form Pekerjaan -->
+                            <li class="nav-item">
+                                <a href="#" class="nav-link">
+                                    <i class="nav-icon fas fa-cog"></i>
+                                    <p>
+                                        Form Pekerjaan
+                                        <i class="fas fa-angle-left right"></i>
+                                    </p>
+                                </a>
 
-                        ?>
+                                <ul class="nav nav-treeview">
+                                    <li class="nav-item">
+                                        <a href="#" class="nav-link">
+                                            <i class="fas fa-users nav-icon"></i>
+                                            <p>Form List Pekerjaan</p>
+                                        </a>
+                                    </li>
 
-                        <!-- LINK Surat Menyurat -->
-                        <li class="nav-item">
-                            <a href="#" class="nav-link">
-                                <i class="nav-icon fas fa-envelope"></i>
-                                <p>
-                                    Surat Menyurat
-                                    <i class="fas fa-angle-left right"></i>
-                                </p>
-                            </a>
+                                    <li class="nav-item">
+                                        <a href="#" class="nav-link">
+                                            <i class="fas fa-user-tie nav-icon"></i>
+                                            <p>Form Detail ASN</p>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </li>
+                            <!-- End Setting Form Pekerjaan -->
 
-                            <ul class="nav nav-treeview">
-                                <li class="nav-item">
-                                    <a href="#" class="nav-link active">
-                                        <i class="far fa-circle nav-icon"></i>
-                                        <p>Surat Masuk</p>
-                                    </a>
-                                </li>
-                                <li class="nav-item">
-                                    <a href="#" class="nav-link">
-                                        <i class="far fa-trash-alt nav-icon"></i>
-                                        <p>Tong Sampah Surat</p>
-                                    </a>
-                                </li>
-                            </ul>
-                        </li>
-                        <!-- END LINK Surat Menyurat -->
+                            <!-- End Setting Form Keperluan -->
+                            <li class="nav-item">
+                                <a href="#" class="nav-link">
+                                    <i class="nav-icon fas fa-cog"></i>
+                                    <p>
+                                        Form Keperluan
+                                        <i class="fas fa-angle-left right"></i>
+                                    </p>
+                                </a>
 
-                        <li class="nav-header">LAPORAN</li>
-                        <li class="nav-item">
-                            <a href="#" class="nav-link">
-                                <i class="nav-icon fas fa-copy"></i>
-                                <p>Laporan</p>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="./table-tamu.php" class="nav-link">
-                                <i class="nav-icon fas fa-user-circle"></i>
-                                <p>Daftar Tamu</p>
-                            </a>
-                        </li>
+                                <ul class="nav nav-treeview">
+                                    <li class="nav-item">
+                                        <a href="#" class="nav-link">
+                                            <i class="fas fa-clipboard-list nav-icon"></i>
+                                            <p>Form List Keperluan</p>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </li>
+                            <!-- End Setting Form Keperluan -->
+                        <?php endif; ?>
 
-                        <?php
-                        // } else { 
 
-                        ?>
-                        <!-- LINK Surat Menyurat -->
-                        <li class="nav-item">
-                            <a href="#" class="nav-link">
-                                <i class="nav-icon fas fa-envelope"></i>
-                                <p>
-                                    Surat Menyurat
-                                    <i class="fas fa-angle-left right"></i>
-                                </p>
-                            </a>
+                        <?php if (in_array($jabatan, ['Admin'])): ?>
+                            <!-- LINK Akun Pengguna -->
+                            <li class="nav-header">Pengguna</li>
+                            <li class="nav-item">
+                                <a href="./table-login.php" class="nav-link">
+                                    <i class="fas fa-user-cog nav-icon"></i>
+                                    <p>Data Akun Pengguna</p>
+                                </a>
+                            </li>
+                            <!-- END LINK Akun Pengguna -->
+                        <?php endif; ?>
 
-                            <ul class="nav nav-treeview">
-                                <li class="nav-item">
-                                    <a href="#" class="nav-link active">
-                                        <i class="far fa-circle nav-icon"></i>
-                                        <p>Surat Masuk</p>
-                                    </a>
-                                </li>
-                                <li class="nav-item">
-                                    <a href="#" class="nav-link">
-                                        <i class="far fa-trash-alt nav-icon"></i>
-                                        <p>Tong Sampah Surat</p>
-                                    </a>
-                                </li>
-                            </ul>
-                        </li>
-                        <!-- END LINK Surat Menyurat -->
+                        <?php if (in_array($jabatan, ['Kepala Dinas Penanaman Modal dan PTSP', 'Sekretaris', 'Kepala Sub Bagian Umum dan Kepegawaian', 'Admin'])): ?>
+                            <!-- LINK Data Pegawai -->
+                            <li class="nav-item">
+                                <a href="./table-pegawai.php" class="nav-link">
+                                    <i class="nav-icon fas fa-users"></i>
+                                    <p>
+                                        Data Pegawai
+                                    </p>
+                                </a>
+                            </li>
+                            <!-- END LINK Data Pegawai -->
 
-                        <!-- LINK Akun Pengguna -->
-                        <li class="nav-item">
-                            <a href="#" class="nav-link">
-                                <i class="nav-icon fas fa-user"></i>
-                                <p>
-                                    Akun Pengguna
-                                    <i class="fas fa-angle-left right"></i>
-                                </p>
-                            </a>
+                            <!-- LINK Data Jabatan Pegawai -->
+                            <li class="nav-item">
+                                <a href="./table-jabatan.php" class="nav-link">
+                                    <i class="nav-icon fas fa-id-badge"></i>
+                                    <p>
+                                        Data Jabatan Pegawai
+                                    </p>
+                                </a>
+                            </li>
+                            <!-- END LINK Data Jabatan Pegawai -->
+                        <?php endif; ?>
 
-                            <ul class="nav nav-treeview">
-                                <li class="nav-item">
-                                    <a href="#" class="nav-link active">
-                                        <i class="fas fa-plus nav-icon"></i>
-                                        <p>Tambah Akun</p>
-                                    </a>
-                                </li>
-                                <li class="nav-item">
-                                    <a href="./table-login.php" class="nav-link">
-                                        <i class="fas fa-table nav-icon"></i>
-                                        <p>Daftar Akun</p>
-                                    </a>
-                                </li>
-                            </ul>
-                        </li>
-                        <!-- END LINK Akun Pengguna -->
-
-                        <!-- LINK Daftar Pegawai -->
-                        <li class="nav-item">
-                            <a href="#" class="nav-link">
-                                <i class="nav-icon fas fa-user"></i>
-                                <p>
-                                    Daftar Pegawai
-                                    <i class="fas fa-angle-left right"></i>
-                                </p>
-                            </a>
-
-                            <ul class="nav nav-treeview">
-                                <li class="nav-item">
-                                    <a href="#" class="nav-link active">
-                                        <i class="fas fa-users nav-icon"></i>
-                                        <p>Daftar Data Pegawai</p>
-                                    </a>
-                                </li>
-                                <li class="nav-item">
-                                    <a href="#" class="nav-link active">
-                                        <i class="fas fa-plus nav-icon"></i>
-                                        <p>Daftar Data Honorer</p>
-                                    </a>
-                                </li>
-                                <li class="nav-item">
-                                    <a href="./table-login.php" class="nav-link">
-                                        <i class="fas fa-table nav-icon"></i>
-                                        <p>Daftar Data ASN</p>
-                                    </a>
-                                </li>
-                            </ul>
-                        </li>
-                        <!-- END LINK Daftar Pegawai -->
-
-                        <li class="nav-header">LAPORAN</li>
-                        <li class="nav-item">
-                            <a href="#" class="nav-link">
-                                <i class="nav-icon fas fa-copy"></i>
-                                <p>Laporan</p>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="./table-tamu.php" class="nav-link">
-                                <i class="nav-icon fas fa-user-circle"></i>
-                                <p>Daftar Tamu</p>
-                            </a>
-                        </li>
-                        <?php
-                        // }
-                        // } 
-                        ?>
+                        <?php if (in_array($jabatan, ['Kepala Dinas Penanaman Modal dan PTSP', 'Sekretaris', 'Kepala Sub Bagian Umum dan Kepegawaian', 'Front Office', 'Front Office (OSS)', 'Admin'])): ?>
+                            <li class="nav-header">LAPORAN</li>
+                            <li class="nav-item">
+                                <a href="#" class="nav-link">
+                                    <i class="nav-icon fas fa-copy"></i>
+                                    <p>Laporan</p>
+                                </a>
+                            </li>
+                        <?php endif; ?>
                     </ul>
                 </nav>
                 <!-- /.sidebar-menu -->

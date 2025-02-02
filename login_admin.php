@@ -1,3 +1,6 @@
+<?php
+session_start();
+?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -42,17 +45,21 @@
 
     <!-- SweetAlert Validation -->
     <?php
-    if (isset($_GET['error'])) {
-        $error = $_GET['error'];
+    // Show session error or success messages if set
+    if (isset($_SESSION['message'])) {
+        $message = $_SESSION['message'];
         echo "
         <script>
             Swal.fire({
-                icon: 'error',
-                title: 'Login Gagal',
-                text: '$error'
+                icon: '{$message['icon']}',
+                title: '{$message['title']}',
+                text: '{$message['text']}',
+                showConfirmButton: true
             });
         </script>
         ";
+        // Clear the session message after displaying
+        unset($_SESSION['message']);
     }
     ?>
 </body>

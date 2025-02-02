@@ -5,13 +5,10 @@ session_start();
 include './connection.php';
 
 
-// if (!isset($_SESSION['jabatan'])) {
-//     header('Location: login_admin.php');
-//     exit;
-// } else {
-//     // header('Location: table-tamu.php');
-// }
-
+if (!isset($_SESSION['nama_jabatan'])) {
+    header('Location: login_admin.php');
+    exit;
+}
 // menampilkan data akun pengguna
 $query = "SELECT * FROM view_akun_pengguna";
 $result = mysqli_query($koneksi, $query);
@@ -25,7 +22,7 @@ $result = mysqli_query($koneksi, $query);
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Siap Layani - Table Login</title>
+    <title>Sibook - Sistem Informasi Buku Tamu</title>
 
     <!-- Google Font: Source Sans Pro -->
     <link rel="stylesheet"
@@ -108,10 +105,10 @@ $result = mysqli_query($koneksi, $query);
                                     <script>
                                         function confirmDelete() {
                                             // Menggunakan confirm bawaan browser
-                                            return confirm('Apakah Anda yakin ingin menghapus data ini?');
+                                            // return confirm('Apakah Anda yakin ingin menghapus data ini?');
 
                                             // Atau menggunakan SweetAlert (lebih recommended)
-                                            /*
+
                                             event.preventDefault();
                                             const url = event.currentTarget.href;
                                             Swal.fire({
@@ -127,51 +124,66 @@ $result = mysqli_query($koneksi, $query);
                                                     window.location.href = url;
                                                 }
                                             })
-                                            */
                                         }
                                     </script>
 
                                     <!-- Tabel Data Tamu -->
-                                    <table id="example1" class="table table-bordered table-striped">
-                                        <thead>
-                                            <tr>
-                                                <th>No</th>
-                                                <th>Username</th>
-                                                <th>Nama Pegawai</th>
-                                                <th>Status</th>
-                                                <th>Jabatan</th>
-                                                <th>Aksi</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <?php
-                                            $no = 1;
-                                            if ($result->num_rows > 0) {
-                                                while ($row = $result->fetch_assoc()) {
-                                            ?>
-                                                    <tr>
-                                                        <td><?= $no++; ?></td>
-                                                        <td><?= $row['username']; ?></td>
-                                                        <td><?= $row['nama_pegawai']; ?></td>
-                                                        <td><?= $row['status']; ?></td>
-                                                        <td><?= $row['nama_jabatan']; ?></td>
-                                                        <td>
-                                                            <a href="./edit-akun-pegawai.php?id=<?= $row['id_login']; ?>" class="btn btn-warning">
-                                                                <i class="fas fa-edit"></i> Edit Data
-                                                            </a>
-                                                            <a href="./hapus-akun-pegawai.php?id=<?= $row['id_login']; ?>" class="btn btn-danger" onclick='return confirmDelete()'><i class="fas fa-trash"></i> Hapus Data</a>
-                                                        </td>
-                                                    </tr>
-                                                <?php
-                                                }
-                                            } else { ?>
+                                    <div class="table-responsive">
+                                        <table id="example1" class="table table-bordered table-striped table-hover">
+                                            <thead>
                                                 <tr>
-                                                    <td colspan='5' class='text-center'>Tidak ada data ditemukan</td>
+                                                    <th>No</th>
+                                                    <th>Username</th>
+                                                    <th>Nama Pegawai</th>
+                                                    <th>Status</th>
+                                                    <th>Jabatan</th>
+                                                    <th>Aksi</th>
                                                 </tr>
-                                            <?php } ?>
+                                            </thead>
+                                            <tbody>
+                                                <?php
+                                                $no = 1;
+                                                if ($result->num_rows > 0) {
+                                                    while ($row = $result->fetch_assoc()) {
+                                                ?>
+                                                        <tr>
+                                                            <td><?= $no++; ?></td>
+                                                            <td><?= htmlspecialchars($row['username']) ?></td>
+                                                            <td><?= htmlspecialchars($row['nama_pegawai']) ?></td>
+                                                            <td>
+                                                                <span class="badge <?= $row['status'] == 'ASN' ? 'badge-success' : 'badge-info' ?>">
+                                                                    <?= htmlspecialchars($row['status']) ?>
+                                                                </span>
+                                                            </td>
+                                                            <td><?= htmlspecialchars($row['nama_jabatan']) ?></td>
+                                                            <td>
+                                                                <div class="btn-group">
+                                                                    <a href="./edit-akun-pegawai.php?id=<?= $row['id_login'] ?>"
+                                                                        class="btn btn-sm btn-warning"
+                                                                        title="Edit">
+                                                                        <i class="fas fa-edit"></i>
+                                                                    </a>
+                                                                    <div class="pr-2"></div>
+                                                                    <a href="./hapus-akun-pegawai.php?id=<?= $row['id_login'] ?>"
+                                                                        class="btn btn-sm btn-danger"
+                                                                        title="Hapus"
+                                                                        onclick="return confirmDelete(event)">
+                                                                        <i class="fas fa-trash"></i>
+                                                                    </a>
+                                                                </div>
+                                                            </td>
+                                                        </tr>
+                                                    <?php
+                                                    }
+                                                } else { ?>
+                                                    <tr>
+                                                        <td colspan='5' class='text-center'>Tidak ada data ditemukan</td>
+                                                    </tr>
+                                                <?php } ?>
 
-                                        </tbody>
-                                    </table>
+                                            </tbody>
+                                        </table>
+                                    </div>
                                 </div>
                             </div>
                         </div>

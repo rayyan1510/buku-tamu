@@ -9,68 +9,63 @@ if (!isset($_SESSION['nama_jabatan'])) {
     exit;
 }
 
-// menampilkan data pegawai
-$query = "SELECT * FROM view_pegawai";
-$result = mysqli_query($koneksi, $query);
+// Proses form submission
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $jabatan = htmlspecialchars(trim($_POST['jabatan']));
 
-if (isset($_POST['submit'])) {
-    # jalankan proses insert
+    try {
+        // Validasi input
+        if (empty($jabatan)) {
+            throw new Exception("Nama jabatan wajib diisi!");
+        }
 
-    // Ambil data dari form
-    $username = trim($_POST['Username']);
-    $password = password_hash(trim($_POST['password']), PASSWORD_DEFAULT); // Hash password
-    $id_pegawai = $_POST['id_pegawai'];
+        // Cek duplikat jabatan
+        $stmt_check = $koneksi->prepare("SELECT jabatan FROM tbl_jabatan WHERE jabatan = ?");
+        $stmt_check->bind_param("s", $jabatan);
+        $stmt_check->execute();
+        $result = $stmt_check->get_result();
 
-    // Cek apakah username atau id_pegawai sudah ada
-    $checkQuery = "SELECT * FROM tbl_login WHERE username = ? OR id_pegawai = ?";
-    $stmt = $koneksi->prepare($checkQuery);
-    $stmt->bind_param("si", $username, $id_pegawai);
-    $stmt->execute();
-    $result = $stmt->get_result();
+        if ($result->num_rows > 0) {
+            throw new Exception("Jabatan '{$jabatan}' sudah ada dalam database!");
+        }
 
-    if ($result->num_rows > 0) {
-        // Jika data sudah ada
+        // Insert data ke database
+        $stmt = $koneksi->prepare("INSERT INTO tbl_jabatan (jabatan) VALUES (?)");
+        $stmt->bind_param("s", $jabatan);
+        $stmt->execute();
+
+        if ($stmt->affected_rows === 0) {
+            throw new Exception("Gagal menambahkan jabatan!");
+        }
+
+        $_SESSION['alert'] = [
+            'type' => 'success',
+            'message' => 'Jabatan berhasil ditambahkan!'
+        ];
+
+        header("Location: table-jabatan.php");
+        exit;
+    } catch (Exception $e) {
+        // Simpan pesan error dan input lama
         $_SESSION['alert'] = [
             'type' => 'error',
-            'title' => 'Gagal!',
-            'message' => 'Akun sudah terdaftar.'
+            'message' => $e->getMessage()
         ];
-        header("Location: table-login.php"); // Redirect setelah simpan
-        exit();
-    } else {
-        // Jika data belum ada, lakukan insert
-        $insertQuery = "INSERT INTO tbl_login (username, password, id_pegawai) VALUES (?, ?, ?)";
-        $stmt = $koneksi->prepare($insertQuery);
-        $stmt->bind_param("ssi", $username, $password, $id_pegawai);
+        $_SESSION['old_input'] = $_POST; // Simpan input
 
-        if ($stmt->execute()) {
-            $_SESSION['alert'] = [
-                'type' => 'success',
-                'title' => 'Berhasil!',
-                'message' => 'Data berhasil disimpan!'
-            ];
-            header("Location: table-login.php"); // Redirect setelah simpan
-            exit();
-        } else {
-            $_SESSION['alert'] = [
-                'type' => 'error',
-                'title' => 'Gagal!',
-                'message' => 'Terjadi kesalahan saat menyimpan data.'
-            ];
-        }
+        header("Location: tambah-jabatan.php");
+        exit;
     }
-    $stmt->close();
 }
 
 ?>
-
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Siap Layani - Table Login</title>
+    <title>Sibook - Sistem Informasi Buku Tamu</title>
 
     <!-- Google Font: Source Sans Pro -->
     <link rel="stylesheet"
@@ -107,7 +102,9 @@ if (isset($_POST['submit'])) {
 <body class="hold-transition sidebar-mini layout-fixed">
     <div class="wrapper">
         <!-- Navbar -->
-        <?php include_once './assets/komponen/navbar.php'; ?>
+        <?php
+        include_once './assets/komponen/navbar.php';
+        ?>
         <!-- /.navbar -->
 
         <!-- Main Sidebar Container -->
@@ -123,12 +120,12 @@ if (isset($_POST['submit'])) {
                 <div class="container-fluid">
                     <div class="row mb-2">
                         <div class="col-sm-6">
-                            <h1 class="m-0">Data Akun Pengguna</h1>
+                            <h1 class="m-0">Data Jabatan</h1>
                         </div>
                         <div class="col-sm-6">
                             <ol class="breadcrumb float-sm-right">
                                 <li class="breadcrumb-item"><a href="#">Home</a></li>
-                                <li class="breadcrumb-item active">Akun Pengguna</li>
+                                <li class="breadcrumb-item active">Data Jabatan</li>
                             </ol>
                         </div>
                     </div>
@@ -141,42 +138,28 @@ if (isset($_POST['submit'])) {
                         <div class="col-12">
                             <div class="card">
                                 <div class="card-header">
-                                    <h3 class="card-title">Tambah Data Akun Pengguna</h3>
+                                    <h3 class="card-title">Tambah Data Jabatan</h3>
                                 </div>
 
                                 <!-- form start -->
                                 <form method="post">
                                     <div class="card-body">
                                         <div class="form-group">
-                                            <label for="username">Username</label>
-                                            <input type="name" class="form-control" id="username" name="Username" placeholder="Masukkan Username" required>
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="exampleInputPassword1">Password</label>
-                                            <input type="password" class="form-control" id="exampleInputPassword1" name="password" placeholder="Password" required>
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="pegawai">Nama Pegawai</label>
-                                            <select class="form-control select2" name="id_pegawai" id="pegawai" data-placeholder="Pilih Nama Pegawai" required>
-                                                <?php
-                                                if ($result->num_rows > 0) {
-                                                ?>
-                                                    <option selected disabled="disabled">Pilih Nama Pegawai</option>
-                                                    <?php
-                                                    while ($row = $result->fetch_assoc()) {
-                                                    ?>
-                                                        <option value="<?= $row['id_pegawai']; ?>"><?= $row['nama_pegawai']; ?></option>
-                                                    <?php }
-                                                } else { ?>
-                                                    <option value="" selected>Data Pegawai Belum Ada</option>
-                                                <?php } ?>
-                                            </select>
+                                            <label for="jabatan">Nama Jabatan</label>
+                                            <input type="text"
+                                                class="form-control"
+                                                id="jabatan"
+                                                name="jabatan"
+                                                placeholder="Contoh: Kepala Dinas"
+                                                required
+                                                value="<?= htmlspecialchars($old_input['jabatan'] ?? '') ?>">
                                         </div>
                                     </div>
+
                                     <!-- /.card-body -->
 
                                     <div class="card-footer">
-                                        <a href="./table-login.php" class="btn btn-secondary color-palette">
+                                        <a href="./table-jabatan.php" class="btn btn-secondary color-palette">
                                             <i class="fas fa-arrow-left"></i> Kembali
                                         </a>
                                         <button type="submit" name="submit" class="btn btn-success"><i class="fas fa-save"></i> Submit</button>
@@ -193,18 +176,16 @@ if (isset($_POST['submit'])) {
 
     </div>
 
-    <script>
-        // Fungsi untuk menangani notifikasi dari session
-        <?php if (isset($_SESSION['alert'])): ?>
+    <?php if (isset($_SESSION['alert'])): ?>
+        <script>
             Swal.fire({
                 icon: '<?= $_SESSION['alert']['type'] ?>',
-                title: '<?= $_SESSION['alert']['title'] ?>',
-                text: '<?= $_SESSION['alert']['message'] ?>',
-                confirmButtonColor: '#3085d6'
-            });
-            <?php unset($_SESSION['alert']); ?>
-        <?php endif; ?>
-    </script>
+                title: '<?= $_SESSION['alert']['type'] === 'error' ? 'Error!' : 'Sukses!' ?>',
+                text: '<?= addslashes($_SESSION['alert']['message']) ?>'
+            })
+        </script>
+        <?php unset($_SESSION['alert']); ?>
+    <?php endif; ?>
 
     <!-- jQuery -->
     <script src="./assets/vendor/admin-lte/plugins/jquery/jquery.min.js"></script>
@@ -243,12 +224,7 @@ if (isset($_POST['submit'])) {
     <!-- AdminLTE dashboard demo (This is only for demo purposes) -->
     <script src="./assets/vendor/admin-lte/dist/js/pages/dashboard.js"></script>
 
-    <script>
-        $(document).ready(function() {
-            //Initialize Select2 Elements
-            $('.select2').select2()
-        });
-    </script>
+
 </body>
 
 </html>

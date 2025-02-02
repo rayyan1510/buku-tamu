@@ -9,8 +9,11 @@ if (!isset($_SESSION['nama_jabatan'])) {
     header('Location: login_admin.php');
     exit;
 }
+//     // header('Location: table-tamu.php');
+// }
+
 // menampilkan data data pegawai
-$query = "SELECT * FROM view_pegawai";
+$query = "SELECT * FROM view_honorer";
 $result = mysqli_query($koneksi, $query);
 
 
@@ -72,12 +75,12 @@ $result = mysqli_query($koneksi, $query);
                 <div class="container-fluid">
                     <div class="row mb-2">
                         <div class="col-sm-6">
-                            <h1 class="m-0">Data Pegawai</h1>
+                            <h1 class="m-0">Data Honorer</h1>
                         </div>
                         <div class="col-sm-6">
                             <ol class="breadcrumb float-sm-right">
                                 <li class="breadcrumb-item"><a href="#">Home</a></li>
-                                <li class="breadcrumb-item active">Data Pegawai</li>
+                                <li class="breadcrumb-item active">Data Honorer</li>
                             </ol>
                         </div>
                     </div>
@@ -90,7 +93,7 @@ $result = mysqli_query($koneksi, $query);
                         <div class="col-12">
                             <div class="card">
                                 <div class="card-header">
-                                    <h3 class="card-title">Data Pegawai</h3>
+                                    <h3 class="card-title">Data Honorer</h3>
                                 </div>
                                 <div class="card-body">
                                     <div class="row mb-3">
@@ -101,7 +104,7 @@ $result = mysqli_query($koneksi, $query);
                                         </div>
                                         <div class="col-1.5 mr-2">
                                             <a href="./table-asn.php" class="btn bg-navy color-palette">
-                                                <i class="fas fa-eye"></i> Lihat Data ASN
+                                                <i class="fas fa-eye"></i> Lihat Data Honorer
                                             </a>
                                         </div>
                                         <div class="col-1.5 mr-2">
@@ -142,7 +145,7 @@ $result = mysqli_query($koneksi, $query);
                                         <thead>
                                             <tr>
                                                 <th>No</th>
-                                                <th>Nama Pegawai</th>
+                                                <th>Nama Honorer</th>
                                                 <th>Status</th>
                                                 <th>Jabatan</th>
                                                 <th>Aksi</th>
@@ -165,13 +168,13 @@ $result = mysqli_query($koneksi, $query);
                                                         <td><?= htmlspecialchars($row['nama_jabatan']) ?></td>
                                                         <td>
                                                             <div class="btn-group">
-                                                                <a href="./edit-pegawai.php?id=<?= $row['id_pegawai'] ?>"
+                                                                <a href="./edit-data-pegawai.php?id=<?= $row['id_pegawai'] ?>"
                                                                     class="btn btn-sm btn-warning"
                                                                     title="Edit">
                                                                     <i class="fas fa-edit"></i>
                                                                 </a>
                                                                 <div class="pr-2"></div>
-                                                                <a href="./hapus-pegawai.php?id=<?= $row['id_pegawai'] ?>"
+                                                                <a href="./hapus-data-pegawai.php?id=<?= $row['id_pegawai'] ?>"
                                                                     class="btn btn-sm btn-danger"
                                                                     title="Hapus"
                                                                     onclick="return confirmDelete(event)">
@@ -235,44 +238,6 @@ $result = mysqli_query($koneksi, $query);
     <!-- <script src="./assets/vendor/admin-lte/dist/js/demo.js"></script> -->
     <!-- AdminLTE dashboard demo (This is only for demo purposes) -->
     <script src="./assets/vendor/admin-lte/dist/js/pages/dashboard.js"></script>
-
-    <script>
-        function confirmDelete(event) {
-            event.preventDefault(); // Hentikan aksi default
-            const url = event.currentTarget.href;
-
-            Swal.fire({
-                title: 'Hapus Data?',
-                text: "Data yang dihapus tidak bisa dikembalikan!",
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: '#d33',
-                cancelButtonColor: '#3085d6',
-                confirmButtonText: 'Ya, Hapus!'
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    window.location.href = url;
-                }
-            });
-        }
-    </script>
-
-    <?php if (isset($_SESSION['alert'])): ?>
-        <script>
-            // Gunakan SweetAlert untuk tampilan lebih baik (opsional)
-            Swal.fire({
-                icon: '<?= $_SESSION['alert']['type'] ?>',
-                title: '<?= ucfirst($_SESSION['alert']['type']) ?>',
-                text: '<?= addslashes($_SESSION['alert']['message']) ?>'
-            });
-
-            // Jika hanya ingin menggunakan alert biasa:
-            // alert('<?= addslashes($_SESSION['alert']['message']) ?>');
-        </script>
-    <?php
-        unset($_SESSION['alert']); // Hapus session setelah ditampilkan
-    endif;
-    ?>
 </body>
 
 </html>

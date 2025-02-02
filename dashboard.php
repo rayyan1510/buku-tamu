@@ -3,12 +3,12 @@
 // Koneksi ke database
 include './connection.php';
 
-// session_start();
+session_start();
 
-// if (!isset($_SESSION['jabatan'])) {
-//     header('Location: login_admin.php');
-//     exit;
-// }
+if (!isset($_SESSION['nama_jabatan'])) {
+    header('Location: login_admin.php');
+    exit;
+}
 
 // Mengambil total tamu
 $resultTotal = $koneksi->query("SELECT COUNT(*) AS total_tamu FROM tamu");
@@ -88,7 +88,21 @@ scratch. This page gets rid of all links and provides the needed markup only.
                 <div class="container-fluid">
                     <div class="row mb-2">
                         <div class="col-sm-6">
-                            <h1 class="m-0">Selamat Datang</h1>
+                            <?php
+                            date_default_timezone_set('Asia/Jakarta'); // Set zona waktu ke Jakarta
+                            $hour = date('H');
+
+                            if ($hour >= 5 && $hour < 12) {
+                                $greeting = "Selamat Pagi";
+                            } elseif ($hour >= 12 && $hour < 15) {
+                                $greeting = "Selamat Siang";
+                            } elseif ($hour >= 15 && $hour < 18) {
+                                $greeting = "Selamat Sore";
+                            } else {
+                                $greeting = "Selamat Malam";
+                            }
+                            ?>
+                            <h1 class="m-0"><?= $greeting; ?>, Selamat Datang!</h1>
                         </div><!-- /.col -->
                         <div class="col-sm-6">
                             <ol class="breadcrumb float-sm-right">

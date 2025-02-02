@@ -5,7 +5,7 @@ include 'connection.php';
 
 session_start();
 
-if (!isset($_SESSION['jabatan'])) {
+if (!isset($_SESSION['nama_jabatan'])) {
     header('Location: login_admin.php');
     exit;
 }

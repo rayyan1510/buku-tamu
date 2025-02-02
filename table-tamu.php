@@ -2,14 +2,12 @@
 // Hubungkan ke database
 include './connection.php';
 
-// session_start();
+session_start();
 
-// if (!isset($_SESSION['jabatan'])) {
-//     header('Location: login_admin.php');
-//     exit;
-// } else {
-//     // header('Location: table-tamu.php');
-// }
+if (!isset($_SESSION['nama_jabatan'])) {
+    header('Location: login_admin.php');
+    exit;
+}
 
 
 // Ambil parameter GET untuk filter

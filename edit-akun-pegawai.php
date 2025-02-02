@@ -5,12 +5,10 @@ session_start();
 include './connection.php';
 
 
-// if (!isset($_SESSION['jabatan'])) {
-//     header('Location: login_admin.php');
-//     exit;
-// } else {
-//     // header('Location: table-tamu.php');
-// }
+if (!isset($_SESSION['nama_jabatan'])) {
+    header('Location: login_admin.php');
+    exit;
+}
 
 
 

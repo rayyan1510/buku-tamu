@@ -12,11 +12,11 @@ if (!isset($_SESSION['nama_jabatan'])) {
 
 
 if (isset($_GET['id'])) {
-    $id_login = intval($_GET['id']); // Konversi ke integer untuk keamanan
+    $id_jabatan = intval($_GET['id']); // Konversi ke integer untuk keamanan
 
     try {
         // Query delete
-        $query = "DELETE FROM tbl_login WHERE id_login = $id_login";
+        $query = "DELETE FROM tbl_jabatan WHERE id_jabatan = $id_jabatan";
 
         if (mysqli_query($koneksi, $query)) {
             $_SESSION['alert'] = [
@@ -33,13 +33,13 @@ if (isset($_GET['id'])) {
         ];
     }
 
-    header("Location: table-login.php");
+    header("Location: table-jabatan.php");
     exit();
 } else {
     $_SESSION['alert'] = [
         'type' => 'error',
         'message' => 'ID tidak valid!'
     ];
-    header("Location: table-login.php");
+    header("Location: table-jabatan.php");
     exit();
 }

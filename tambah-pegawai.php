@@ -10,56 +10,89 @@ if (!isset($_SESSION['nama_jabatan'])) {
 }
 
 // menampilkan data pegawai
-$query = "SELECT * FROM view_pegawai";
+$query = "SELECT * FROM tbl_jabatan";
 $result = mysqli_query($koneksi, $query);
 
 if (isset($_POST['submit'])) {
     # jalankan proses insert
 
     // Ambil data dari form
-    $username = trim($_POST['Username']);
-    $password = password_hash(trim($_POST['password']), PASSWORD_DEFAULT); // Hash password
-    $id_pegawai = $_POST['id_pegawai'];
+    $nama_pegawai = trim($_POST['nama_pegawai']);
+    $status = $_POST['status'];
+    $id_jabatan = $_POST['id_jabatan'];
+    $nip = $_POST['nip'] ?? null;
 
-    // Cek apakah username atau id_pegawai sudah ada
-    $checkQuery = "SELECT * FROM tbl_login WHERE username = ? OR id_pegawai = ?";
-    $stmt = $koneksi->prepare($checkQuery);
-    $stmt->bind_param("si", $username, $id_pegawai);
-    $stmt->execute();
-    $result = $stmt->get_result();
+    // Cek apakah pegawai sudah ada berdasarkan nama
+    $cek_pegawai = $koneksi->prepare("SELECT id_pegawai FROM tbl_pegawai WHERE nama_pegawai = ?");
+    $cek_pegawai->bind_param("s", $nama_pegawai);
+    $cek_pegawai->execute();
+    $cek_pegawai->store_result();
 
-    if ($result->num_rows > 0) {
-        // Jika data sudah ada
+    if ($cek_pegawai->num_rows > 0) {
         $_SESSION['alert'] = [
             'type' => 'error',
             'title' => 'Gagal!',
-            'message' => 'Akun sudah terdaftar.'
+            'message' => 'Pegawai dengan nama yang sama sudah ada.'
         ];
-        header("Location: table-login.php"); // Redirect setelah simpan
+        header("Location: tambah-pegawai.php");
+        exit();
+    }
+
+    // Simpan data pegawai ke tabel tbl_pegawai
+    $stmt = $koneksi->prepare("INSERT INTO tbl_pegawai (nama_pegawai, status, id_jabatan) VALUES (?, ?, ?)");
+    $stmt->bind_param("ssi", $nama_pegawai, $status, $id_jabatan);
+
+    if ($stmt->execute()) {
+        $id_pegawai = $stmt->insert_id; // Ambil ID pegawai yang baru disimpan
+
+        // Jika status adalah "ASN", simpan ke tabel asn
+        if ($status === "ASN") {
+            // Cek apakah NIP sudah ada
+            $cek_nip = $koneksi->prepare("SELECT id_asn FROM asn WHERE nip = ?");
+            $cek_nip->bind_param("s", $nip);
+            $cek_nip->execute();
+            $cek_nip->store_result();
+
+            if ($cek_nip->num_rows > 0) {
+                $_SESSION['alert'] = [
+                    'type' => 'error',
+                    'title' => 'Gagal!',
+                    'message' => 'NIP sudah terdaftar.'
+                ];
+                header("Location: tambah-pegawai.php");
+                exit();
+            }
+
+            // Simpan ke tabel asn
+            $stmt_asn = $koneksi->prepare("INSERT INTO asn (id_pegawai, nip) VALUES (?, ?)");
+            $stmt_asn->bind_param("is", $id_pegawai, $nip);
+            if (!$stmt_asn->execute()) {
+                $_SESSION['alert'] = [
+                    'type' => 'error',
+                    'title' => 'Gagal!',
+                    'message' => 'Gagal menyimpan data ASN.'
+                ];
+                header("Location: tambah-pegawai.php");
+                exit();
+            }
+        }
+
+        $_SESSION['alert'] = [
+            'type' => 'success',
+            'title' => 'Berhasil!',
+            'message' => 'Data pegawai berhasil disimpan.'
+        ];
+        header("Location: table-pegawai.php");
         exit();
     } else {
-        // Jika data belum ada, lakukan insert
-        $insertQuery = "INSERT INTO tbl_login (username, password, id_pegawai) VALUES (?, ?, ?)";
-        $stmt = $koneksi->prepare($insertQuery);
-        $stmt->bind_param("ssi", $username, $password, $id_pegawai);
-
-        if ($stmt->execute()) {
-            $_SESSION['alert'] = [
-                'type' => 'success',
-                'title' => 'Berhasil!',
-                'message' => 'Data berhasil disimpan!'
-            ];
-            header("Location: table-login.php"); // Redirect setelah simpan
-            exit();
-        } else {
-            $_SESSION['alert'] = [
-                'type' => 'error',
-                'title' => 'Gagal!',
-                'message' => 'Terjadi kesalahan saat menyimpan data.'
-            ];
-        }
+        $_SESSION['alert'] = [
+            'type' => 'error',
+            'title' => 'Gagal!',
+            'message' => 'Terjadi kesalahan saat menyimpan data pegawai.'
+        ];
+        header("Location: tambah-pegawai.php");
+        exit();
     }
-    $stmt->close();
 }
 
 ?>
@@ -70,7 +103,7 @@ if (isset($_POST['submit'])) {
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Siap Layani - Table Login</title>
+    <title>Sibook - Sistem Informasi Buku Tamu</title>
 
     <!-- Google Font: Source Sans Pro -->
     <link rel="stylesheet"
@@ -107,7 +140,9 @@ if (isset($_POST['submit'])) {
 <body class="hold-transition sidebar-mini layout-fixed">
     <div class="wrapper">
         <!-- Navbar -->
-        <?php include_once './assets/komponen/navbar.php'; ?>
+        <?php
+        include_once './assets/komponen/navbar.php';
+        ?>
         <!-- /.navbar -->
 
         <!-- Main Sidebar Container -->
@@ -123,12 +158,12 @@ if (isset($_POST['submit'])) {
                 <div class="container-fluid">
                     <div class="row mb-2">
                         <div class="col-sm-6">
-                            <h1 class="m-0">Data Akun Pengguna</h1>
+                            <h1 class="m-0">Data Pegawai</h1>
                         </div>
                         <div class="col-sm-6">
                             <ol class="breadcrumb float-sm-right">
                                 <li class="breadcrumb-item"><a href="#">Home</a></li>
-                                <li class="breadcrumb-item active">Akun Pengguna</li>
+                                <li class="breadcrumb-item active">Data Pegawai</li>
                             </ol>
                         </div>
                     </div>
@@ -141,34 +176,40 @@ if (isset($_POST['submit'])) {
                         <div class="col-12">
                             <div class="card">
                                 <div class="card-header">
-                                    <h3 class="card-title">Tambah Data Akun Pengguna</h3>
+                                    <h3 class="card-title">Tambah Data Pegawai</h3>
                                 </div>
 
                                 <!-- form start -->
                                 <form method="post">
                                     <div class="card-body">
                                         <div class="form-group">
-                                            <label for="username">Username</label>
-                                            <input type="name" class="form-control" id="username" name="Username" placeholder="Masukkan Username" required>
+                                            <label for="nama_pegawai">Nama Pegawai</label>
+                                            <input type="name" class="form-control" id="nama_pegawai" name="nama_pegawai" placeholder="Masukkan Nama Pegawai" required>
                                         </div>
                                         <div class="form-group">
-                                            <label for="exampleInputPassword1">Password</label>
-                                            <input type="password" class="form-control" id="exampleInputPassword1" name="password" placeholder="Password" required>
+                                            <label for="status">Status Pegawai</label>
+                                            <select class="form-control" name="status" placeholder="Pilih Status Pegawai" id="status" required>
+                                                <option selected disabled>Pilih status pegawai</option>
+                                                <option value="ASN">ASN</option>
+                                                <option value="Outsourcing">Outsourcing</option>
+                                            </select>
                                         </div>
+
+                                        <div id="dynamic-fields"></div>
+
                                         <div class="form-group">
-                                            <label for="pegawai">Nama Pegawai</label>
-                                            <select class="form-control select2" name="id_pegawai" id="pegawai" data-placeholder="Pilih Nama Pegawai" required>
+                                            <label for="jabatan">Jabatan</label>
+                                            <select class="form-control select2" name="id_jabatan" id="jabatan" data-placeholder="Pilih Jabatan" required>
                                                 <?php
-                                                if ($result->num_rows > 0) {
-                                                ?>
-                                                    <option selected disabled="disabled">Pilih Nama Pegawai</option>
+                                                if ($result->num_rows > 0) { ?>
+                                                    <option selected disabled="disabled">Pilih Jabatan</option>
                                                     <?php
                                                     while ($row = $result->fetch_assoc()) {
                                                     ?>
-                                                        <option value="<?= $row['id_pegawai']; ?>"><?= $row['nama_pegawai']; ?></option>
+                                                        <option value="<?= $row['id_jabatan']; ?>"><?= $row['jabatan']; ?></option>
                                                     <?php }
                                                 } else { ?>
-                                                    <option value="" selected>Data Pegawai Belum Ada</option>
+                                                    <option selected disabled="disabled">Data Jabatan Belum Ada</option>
                                                 <?php } ?>
                                             </select>
                                         </div>
@@ -176,7 +217,7 @@ if (isset($_POST['submit'])) {
                                     <!-- /.card-body -->
 
                                     <div class="card-footer">
-                                        <a href="./table-login.php" class="btn btn-secondary color-palette">
+                                        <a href="./table-pegawai.php" class="btn btn-secondary color-palette">
                                             <i class="fas fa-arrow-left"></i> Kembali
                                         </a>
                                         <button type="submit" name="submit" class="btn btn-success"><i class="fas fa-save"></i> Submit</button>
@@ -246,7 +287,31 @@ if (isset($_POST['submit'])) {
     <script>
         $(document).ready(function() {
             //Initialize Select2 Elements
-            $('.select2').select2()
+            $('.select2').select2();
+
+            const dynamicFields = $('#dynamic-fields');
+
+            $('#status').change(function() {
+                dynamicFields.empty(); // Hapus semua field dynamic
+
+                if ($(this).val() === 'ASN') {
+                    // Membuat elemen NIP
+                    const nipGroup = $('<div>').addClass('form-group');
+                    nipGroup.append(
+                        $('<label>').attr('for', 'nip').text('NIP'),
+                        $('<input>').addClass('form-control')
+                        .attr({
+                            type: 'text',
+                            id: 'nip',
+                            name: 'nip',
+                            placeholder: 'Masukkan NIP',
+                            required: true
+                        })
+                    );
+
+                    dynamicFields.append(nipGroup);
+                }
+            }).trigger('change'); // Trigger perubahan awal
         });
     </script>
 </body>

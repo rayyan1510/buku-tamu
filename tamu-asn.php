@@ -9,8 +9,9 @@ if (!isset($_SESSION['nama_jabatan'])) {
     header('Location: login_admin.php');
     exit;
 }
-// menampilkan data data pegawai
-$query = "SELECT * FROM view_pegawai";
+
+// menampilkan data akun pengguna
+$query = "SELECT * FROM view_akun_pengguna";
 $result = mysqli_query($koneksi, $query);
 
 
@@ -72,12 +73,12 @@ $result = mysqli_query($koneksi, $query);
                 <div class="container-fluid">
                     <div class="row mb-2">
                         <div class="col-sm-6">
-                            <h1 class="m-0">Data Pegawai</h1>
+                            <h1 class="m-0">Data Tamu Asn</h1>
                         </div>
                         <div class="col-sm-6">
                             <ol class="breadcrumb float-sm-right">
                                 <li class="breadcrumb-item"><a href="#">Home</a></li>
-                                <li class="breadcrumb-item active">Data Pegawai</li>
+                                <li class="breadcrumb-item active">Tamu Asn</li>
                             </ol>
                         </div>
                     </div>
@@ -90,23 +91,14 @@ $result = mysqli_query($koneksi, $query);
                         <div class="col-12">
                             <div class="card">
                                 <div class="card-header">
-                                    <h3 class="card-title">Data Pegawai</h3>
+                                    <h3 class="card-title">Data Tamu Asn</h3>
                                 </div>
                                 <div class="card-body">
+
                                     <div class="row mb-3">
-                                        <div class="col-1.5 mr-2">
-                                            <a href="./tambah-pegawai.php" class="btn btn-success color-palette">
+                                        <div class="col-1.5">
+                                            <a href="./tambah-akun-pegawai.php" class="btn btn-success color-palette">
                                                 <i class="fas fa-plus-square"></i> Tambah Data
-                                            </a>
-                                        </div>
-                                        <div class="col-1.5 mr-2">
-                                            <a href="./table-asn.php" class="btn bg-navy color-palette">
-                                                <i class="fas fa-eye"></i> Lihat Data ASN
-                                            </a>
-                                        </div>
-                                        <div class="col-1.5 mr-2">
-                                            <a href="./table-honorer.php" class="btn bg-lightblue color-palette">
-                                                <i class="fas fa-eye"></i> Lihat Data Honorer
                                             </a>
                                         </div>
                                     </div>
@@ -138,58 +130,66 @@ $result = mysqli_query($koneksi, $query);
                                     </script>
 
                                     <!-- Tabel Data Tamu -->
-                                    <table id="example1" class="table table-bordered table-striped">
-                                        <thead>
-                                            <tr>
-                                                <th>No</th>
-                                                <th>Nama Pegawai</th>
-                                                <th>Status</th>
-                                                <th>Jabatan</th>
-                                                <th>Aksi</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <?php
-                                            $no = 1;
-                                            if ($result->num_rows > 0) {
-                                                while ($row = $result->fetch_assoc()) {
-                                            ?>
-                                                    <tr>
-                                                        <td><?= $no++; ?></td>
-                                                        <td><?= htmlspecialchars($row['nama_pegawai']) ?></td>
-                                                        <td>
-                                                            <span class="badge <?= $row['status'] == 'ASN' ? 'badge-success' : 'badge-info' ?>">
-                                                                <?= htmlspecialchars($row['status']) ?>
-                                                            </span>
-                                                        </td>
-                                                        <td><?= htmlspecialchars($row['nama_jabatan']) ?></td>
-                                                        <td>
-                                                            <div class="btn-group">
-                                                                <a href="./edit-pegawai.php?id=<?= $row['id_pegawai'] ?>"
-                                                                    class="btn btn-sm btn-warning"
-                                                                    title="Edit">
-                                                                    <i class="fas fa-edit"></i>
-                                                                </a>
-                                                                <div class="pr-2"></div>
-                                                                <a href="./hapus-pegawai.php?id=<?= $row['id_pegawai'] ?>"
-                                                                    class="btn btn-sm btn-danger"
-                                                                    title="Hapus"
-                                                                    onclick="return confirmDelete(event)">
-                                                                    <i class="fas fa-trash"></i>
-                                                                </a>
-                                                            </div>
-                                                        </td>
-                                                    </tr>
-                                                <?php
-                                                }
-                                            } else { ?>
+                                    <div class="table-responsive">
+                                        <table id="example1" class="table table-bordered table-striped table-hover">
+                                            <thead>
                                                 <tr>
-                                                    <td colspan='5' class='text-center'>Tidak ada data ditemukan</td>
+                                                    <th>No</th>
+                                                    <th>Nomor Identitas</th>
+                                                    <th>Nama Pegawai</th>
+                                                    <th>Asal Instansi</th>
+                                                    <th>Jabatan</th>
+                                                    <th>Tanggal Kunjungan</th>
+                                                    <th>Keperluan</th>
                                                 </tr>
-                                            <?php } ?>
+                                            </thead>
+                                            <tbody>
+                                                <?php
+                                                // $no = 1;
+                                                // if ($result->num_rows > 0) {
+                                                //     while ($row = $result->fetch_assoc()) {
+                                                ?>
+                                                <!-- <tr>
+                                                            <td><?= $no++; ?></td>
+                                                            <td><?= htmlspecialchars($row['username']) ?></td>
+                                                            <td><?= htmlspecialchars($row['nama_pegawai']) ?></td>
+                                                            <td>
+                                                                <span class="badge <?= $row['status'] == 'ASN' ? 'badge-success' : 'badge-info' ?>">
+                                                                    <?= htmlspecialchars($row['status']) ?>
+                                                                </span>
+                                                            </td>
+                                                            <td><?= htmlspecialchars($row['nama_jabatan']) ?></td>
+                                                            <td>
+                                                                <div class="btn-group">
+                                                                    <a href="./edit-akun-pegawai.php?id=<?= $row['id_login'] ?>"
+                                                                        class="btn btn-sm btn-warning"
+                                                                        title="Edit">
+                                                                        <i class="fas fa-edit"></i>
+                                                                    </a>
+                                                                    <div class="pr-2"></div>
+                                                                    <a href="./hapus-akun-pegawai.php?id=<?= $row['id_login'] ?>"
+                                                                        class="btn btn-sm btn-danger"
+                                                                        title="Hapus"
+                                                                        onclick="return confirmDelete(event)">
+                                                                        <i class="fas fa-trash"></i>
+                                                                    </a>
+                                                                </div>
+                                                            </td>
+                                                        </tr> -->
+                                                <?php
+                                                //     }
+                                                // } else { 
+                                                ?>
+                                                <!-- <tr>
+                                                        <td colspan='5' class='text-center'>Tidak ada data ditemukan</td>
+                                                    </tr> -->
+                                                <?php
+                                                // } 
+                                                ?>
 
-                                        </tbody>
-                                    </table>
+                                            </tbody>
+                                        </table>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -235,27 +235,6 @@ $result = mysqli_query($koneksi, $query);
     <!-- <script src="./assets/vendor/admin-lte/dist/js/demo.js"></script> -->
     <!-- AdminLTE dashboard demo (This is only for demo purposes) -->
     <script src="./assets/vendor/admin-lte/dist/js/pages/dashboard.js"></script>
-
-    <script>
-        function confirmDelete(event) {
-            event.preventDefault(); // Hentikan aksi default
-            const url = event.currentTarget.href;
-
-            Swal.fire({
-                title: 'Hapus Data?',
-                text: "Data yang dihapus tidak bisa dikembalikan!",
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: '#d33',
-                cancelButtonColor: '#3085d6',
-                confirmButtonText: 'Ya, Hapus!'
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    window.location.href = url;
-                }
-            });
-        }
-    </script>
 
     <?php if (isset($_SESSION['alert'])): ?>
         <script>
